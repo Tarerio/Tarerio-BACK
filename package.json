@@ -1,0 +1,26 @@
+{
+  "name": "tarerio",
+  "version": "1.0.0",
+  "description": "Tarerio Backend Repository",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tarerio/Tarerio-BACK.git"
+  },
+  "author": "ETSIITosos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tarerio/Tarerio-BACK/issues"
+  },
+  "homepage": "https://github.com/Tarerio/Tarerio-BACK#readme",
+  "dependencies": {
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
