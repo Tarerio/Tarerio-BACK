@@ -1,0 +1,2 @@
+.env
+node_modules/ # this means that the node_modules folder will not be pushed to the repository
