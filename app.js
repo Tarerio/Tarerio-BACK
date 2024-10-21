@@ -1,15 +1,13 @@
 const express = require('express');
 const app = express();
 const sequelize = require('./config/database');
-const userRoutes = require('./routes/userRoutes');
+const studentRoutes = require('./routes/studentRoutes');
 require('dotenv').config();
 
 app.use(express.json());
 
-// npm run dev -> HOT RELOAD
-
 // Las rutas
-app.use('/usuarios', userRoutes);
+app.use('/alumnos', studentRoutes);
 
 
 const port = process.env.PORT || 3000;
