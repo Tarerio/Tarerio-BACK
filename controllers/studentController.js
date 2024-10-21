@@ -39,11 +39,11 @@ const registrarAlumno = (req, res) => {
 };
 
 const actualizarAlumno = async (req, res) => {
-    const { nickname, patron } = req.query;
+    const { nickname, patron,id_usuario } = req.query;
 
     try {
         // Buscar al estudiante por su nickname
-        const student = await Student.findOne({ where: { nickname } });
+        const student = await Student.findOne({ where: { id_usuario } });
 
         if (!student) {
             return res.status(404).json({ message: 'Alumno no encontrado' });
@@ -66,5 +66,6 @@ const actualizarAlumno = async (req, res) => {
 module.exports = {
     listarAlumnos,
     actualizarAlumno,
+    obtenerAlumno,
     registrarAlumno
 };
