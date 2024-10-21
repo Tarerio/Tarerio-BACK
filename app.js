@@ -9,7 +9,7 @@ app.use(express.json());
 // npm run dev -> HOT RELOAD
 
 // Las rutas
-app.use('/api', userRoutes);
+app.use('/usuarios', userRoutes);
 
 
 const port = process.env.PORT || 3000;
