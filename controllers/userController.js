@@ -10,7 +10,7 @@ exports.inicioSesionAlumno = (req, res) => {
 
      User.create({
         nickname: 'paquito galaxia',
-        contrasenia: 'SSBBS'
+        contrasenia: 'D2D0D2D0'
     }).then(user => {
         console.log('Usuario creado:', user);
     }).catch(err => {
