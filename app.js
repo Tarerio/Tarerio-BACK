@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const sequelize = require('./config/database');
 const userRoutes = require('./routes/userRoutes');
+const tareaJuegoRoutes = require('./routes/tareaJuegoRoutes');
 require('dotenv').config();
 
 app.use(express.json());
@@ -10,6 +11,7 @@ app.use(express.json());
 
 // Las rutas
 app.use('/usuarios', userRoutes);
+app.use('/tareaJuego', tareaJuegoRoutes);
 
 
 const port = process.env.PORT || 3000;
