@@ -9,25 +9,28 @@ const listarAlumnos = (req, res) => {
     });
 }
 
-const obtenerAlumno = (req, res) => {
-    const { nickname } = req.query;
+const obtenerAlumno = async (req, res) => {
+    const { id_usuario } = req.params;
 
     Student.findOne({
-        where: {
-            nickname: nickname
-        }
+        where: { id_usuario }
     }).then(user => {
-        console.log('Alumno encontrado:', user);
+        console.log('Alumno:', user);
         res.status(200).json(user);
     }).catch(err => {
-        console.error('Error al buscar el alumno:', err);
+        console.error('Error al obtener el alumno:', err);
     });
-}
+
+};
 
 const registrarAlumno = (req, res) => {
-    const { nickname,patron } = req.query;
+    const { nickname, patron } = req.body;
 
-     Student.create({
+    if (!nickname || !patron) {
+        return res.status(400).json({ message: 'Nickname y contraseña son requeridos' });
+    }
+
+    Student.create({
         nickname: nickname,
         contrasenia: patron
     }).then(user => {
@@ -38,29 +41,30 @@ const registrarAlumno = (req, res) => {
     });
 };
 
-const actualizarAlumno = async (req, res) => {
-    const { nickname, patron,id_usuario } = req.query;
+const actualizarAlumno = (req, res) => {
+    const { nickname, patron } = req.body;
+    const { id_usuario } = req.params;
 
-    try {
-        // Buscar al estudiante por su nickname
-        const student = await Student.findOne({ where: { id_usuario } });
-
+    Student.findOne({ 
+        where: { id_usuario } 
+    }).then(student => {
         if (!student) {
-            return res.status(404).json({ message: 'Alumno no encontrado' });
+            return res.status(404).json({ message: 'No se ha encontrado el alumno que se quiere actualizar' });
         }
 
-        // Actualizar los datos del estudiante
-        await student.update({
+        return student.update({
             nickname: nickname,
             contrasenia: patron
         });
-
-        console.log('Alumno actualizado:', student);
-        res.status(201).json(student);
-    } catch (err) {
+    })
+    .then(updatedStudent => {
+        console.log('Alumno actualizado:', updatedStudent);
+        res.status(201).json(updatedStudent);
+    })
+    .catch(err => {
         console.error('Error al actualizar el alumno:', err);
         res.status(500).json({ message: 'Error al actualizar el alumno' });
-    }
+    });
 };
 
 module.exports = {

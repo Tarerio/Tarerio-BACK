@@ -5,6 +5,7 @@ const studentRoutes = require('./routes/studentRoutes');
 require('dotenv').config();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Las rutas
 app.use('/alumnos', studentRoutes);
