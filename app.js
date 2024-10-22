@@ -10,7 +10,6 @@ app.use(express.urlencoded({ extended: true }));
 // Las rutas
 app.use('/alumnos', studentRoutes);
 
-
 const port = process.env.PORT || 3000;
 
 sequelize.sync().then(() => {

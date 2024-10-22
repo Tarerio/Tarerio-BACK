@@ -1,6 +1,8 @@
 const Alumno = require('../models/student');
 
-const listarAlumnos = (req, res) => {
+//GET
+// http://localhost:3000/alumnos
+exports.listarAlumnos = (req, res) => {
     Alumno.findAll().then(users => {
         res.status(200).json({
             status: 'success',
@@ -16,7 +18,9 @@ const listarAlumnos = (req, res) => {
     });
 }
 
-const obtenerAlumno = async (req, res) => {
+//GET
+// http://localhost:3000/alumnos/:id_usuario
+exports.obtenerAlumno = async (req, res) => {
     const { id_usuario } = req.params;
 
     Alumno.findOne({
@@ -44,7 +48,9 @@ const obtenerAlumno = async (req, res) => {
 
 };
 
-const registrarAlumno = (req, res) => {
+//POST
+// http://localhost:3000/alumnos/create
+exports.registrarAlumno = (req, res) => {
     const { nickname, patron } = req.body;
     const validChars = ['D', 'S', 'F', 'I'];//Dinosaurio, Superheroe, Figura, Insecto
     const charIndices = [0, 2, 4, 6];
@@ -88,7 +94,9 @@ const registrarAlumno = (req, res) => {
     });
 };
 
-const actualizarAlumno = (req, res) => {
+//PUT
+// http://localhost:3000/alumnos/:id_usuario
+exports.actualizarAlumno = (req, res) => {
     const { nickname, patron } = req.body;
     const { id_usuario } = req.params;
 
@@ -121,9 +129,30 @@ const actualizarAlumno = (req, res) => {
     });
 };
 
-module.exports = {
-    listarAlumnos,
-    actualizarAlumno,
-    obtenerAlumno,
-    registrarAlumno
-};
+//DELETE
+// http://localhost:3000/alumnos/:id_usuario
+exports.eliminarAlumno = (req, res) => {
+    const { id_usuario } = req.params;
+
+    Alumno.destroy({
+        where: { id_usuario }
+    }).then(deletedRows => {
+        if (!deletedRows) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'No se ha encontrado el alumno que se quiere eliminar'
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Alumno eliminado correctamente'
+        });
+    }).catch(err => {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al eliminar el alumno',
+            error: err
+        });
+    });
+}
