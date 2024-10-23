@@ -53,12 +53,23 @@ exports.obtenerProfesor = async (req, res) => {
 // http://localhost:3000/profesores/create
 exports.registrarProfesor = async (req, res) => {
     const { nickname, patron} = req.body;
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).+$/;
 
 
-    if (!nickname || !patron || patron.length < 8) {
+    if (!nickname || !patron) {
         return res.status(400).json({ 
             status: 'error',
-            message: 'Nickname, contraseña son requeridos y la contraseña debe tener al menos 8 caracteres' 
+            message: 'Nickname y contraseña son requeridos' 
+        });
+    }else if(patron.length < 8){
+        return res.status(400).json({ 
+            status: 'error',
+            message: 'La contraseña debe tener al menos 8 caracteres'
+        });
+    }else if (!regex.test(patron)) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'La contraseña debe contener al menos una mayúscula, un número y un carácter especial'
         });
     }
 
@@ -88,17 +99,23 @@ exports.registrarProfesor = async (req, res) => {
 exports.actualizarProfesor = (req, res) => {
     const { nickname, patron } = req.body;
     const { id_usuario } = req.params;
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).+$/;
 
-    if(patron.length < 8) {
+    if(patron && patron.length < 8) {
         return res.status(400).json({ 
             status: 'error',
             message: 'La contraseña debe tener al menos 8 caracteres' 
+        });
+    }else if (patron && !regex.test(patron)) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'La contraseña debe contener al menos una mayúscula, un número y un carácter especial'
         });
     }
 
     Profesor.findOne({
         where: { id_usuario }
-    }).then(teacher => {
+    }).then(async teacher => {
         if (!teacher) {
             return res.status(404).json({
                 status: 'error',
@@ -106,9 +123,12 @@ exports.actualizarProfesor = (req, res) => {
             });
         }
 
+        const coste = 1; // Puedes ajustar el costo de hashing (más alto = más seguro, pero más lento)
+        const hashedPatron = await bcrypt.hash(patron, coste);
+
         return teacher.update({
             nickname: nickname,
-            contrasenia: patron,
+            contrasenia: hashedPatron,
         });
     }).then(updatedTeacher => {
         res.status(201).json({
