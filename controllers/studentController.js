@@ -51,7 +51,7 @@ exports.obtenerAlumno = async (req, res) => {
 //POST
 // http://localhost:3000/alumnos/create
 exports.registrarAlumno = (req, res) => {
-    const { nickname, patron } = req.body;
+    const { nickname, patron, perfil } = req.body;
     const validChars = ['D', 'S', 'F', 'I'];//Dinosaurio, Superheroe, Figura, Insecto
     const charIndices = [0, 2, 4, 6];
     const numIndices = [1, 3, 5, 7];
@@ -64,10 +64,10 @@ exports.registrarAlumno = (req, res) => {
         return !isNaN(num) && num >= 0 && num <= 3;
     });
 
-    if (!nickname || !patron) {
+    if (!nickname || !patron || !perfil) {
         return res.status(400).json({ 
             status: 'error',
-            message: 'Nickname y contraseña son requeridos' 
+            message: 'Nickname, contraseña y perfil son requeridos' 
         });
     }else if(patron.length !== 8 || !areValidChar || !areValidNums){
         return res.status(400).json({ 
@@ -76,9 +76,25 @@ exports.registrarAlumno = (req, res) => {
         });
     }
 
+    const texto = perfil.texto || false;
+    const imagenes = perfil.imagenes || false;
+    const pictograma = perfil.pictograma|| false;
+    const video = perfil.video || false;
+
+    if(!texto && !imagenes && !pictograma && !video){
+        return res.status(400).json({ 
+            status: 'error',
+            message: 'El alumno debe tener al menos un tipo de perfil' 
+        });
+    }
+
     Alumno.create({
         nickname: nickname,
-        contrasenia: patron
+        contrasenia: patron,
+        texto: texto,
+        imagenes: imagenes,
+        pictograma: pictograma,
+        video: video
     }).then(student => {
         res.status(201).json({
             status: 'success',
@@ -97,8 +113,20 @@ exports.registrarAlumno = (req, res) => {
 //PUT
 // http://localhost:3000/alumnos/:id_usuario
 exports.actualizarAlumno = (req, res) => {
-    const { nickname, patron } = req.body;
+    const { nickname, patron, perfil } = req.body;
     const { id_usuario } = req.params;
+
+    const texto = perfil.texto || false;
+    const imagenes = perfil.imagenes || false;
+    const pictograma = perfil.pictograma|| false;
+    const video = perfil.video || false;
+
+    if(!texto && !imagenes && !pictograma && !video){
+        return res.status(400).json({ 
+            status: 'error',
+            message: 'El alumno debe tener al menos un tipo de perfil' 
+        });
+    }
 
     Alumno.findOne({
         where: { id_usuario }
@@ -112,7 +140,11 @@ exports.actualizarAlumno = (req, res) => {
 
         return student.update({
             nickname: nickname,
-            contrasenia: patron
+            contrasenia: patron,
+            texto: texto,
+            imagenes: imagenes,
+            pictograma: pictograma,
+            video: video
         });
     }).then(updatedStudent => {
         res.status(201).json({

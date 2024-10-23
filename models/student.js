@@ -16,7 +16,27 @@ const Alumno = sequelize.define('Alumno', {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
-  }
+  },
+  texto:{
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    unique: false
+  },
+  imagenes:{
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    unique: false
+  },
+  pictograma:{
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    unique: false
+  },
+  video:{
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    unique: false
+  },
 });
 
 module.exports = Alumno;

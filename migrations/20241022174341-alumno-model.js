@@ -1,10 +1,11 @@
 'use strict';
 
 //Ejemplo de archivo de migración
-//Crear una migración con 'sequelize migration:generate --name update-alumno-model'
+//Crear una migración con 'sequelize migration:generate --name 'nombre_modelo'-model'
 //Se ejecuta con 'sequelize db:migrate'
-//Se deshace con 'sequelize db:migrate:undo'(es como un rollback)
-//Hacer refresh de la base de datos y volver a migrar todo con 'db:migrate:undo:all'
+//Se deshace con 'sequelize db:migrate:undo'(es opcional ya que es como un rollback)
+
+//Elimina todas las tablas'sequelize db:migrate:undo:all'
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -24,6 +25,26 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
+      },
+      texto:{
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        unique: false
+      },
+      imagenes:{
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        unique: false
+      },
+      pictograma:{
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        unique: false
+      },
+      video:{
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        unique: false
       },
       createdAt: {
         allowNull: false,

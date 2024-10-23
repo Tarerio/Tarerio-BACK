@@ -7,7 +7,7 @@ const studentController = require('../controllers/studentController');
 
 //POST
 // http://localhost:3000/alumnos/create
-router.post('/create', studentController.registrarAlumno);
+router.post('/crear', studentController.registrarAlumno);
 
 //GET
 // http://localhost:3000/alumnos
