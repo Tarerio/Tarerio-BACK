@@ -3,6 +3,7 @@ const app = express();
 const sequelize = require('./config/database');
 const studentRoutes = require('./routes/studentRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
+const tareaJuegoRoutes = require('./routes/tareaJuegoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const classroomRoutes = require('./routes/classroomRoutes');
 require('dotenv').config();
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 // Las rutas
 app.use('/alumnos', studentRoutes);
 app.use('/profesores', teacherRoutes);
+app.use('/tareaJuego', tareaJuegoRoutes);
 app.use('/administradores', adminRoutes);
 app.use('/aulas', classroomRoutes);
 
