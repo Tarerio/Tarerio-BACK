@@ -6,6 +6,10 @@ const teacherController = require('../controllers/teacherController');
 //Endpoints de la API de profesores
 
 //POST
+// http://localhost:3000/profesores/inicioSesionProfesor
+router.post('/inicioSesionProfesor', teacherController.inicioSesionProfesor);
+
+//POST
 // http://localhost:3000/profesores/create
 router.post('/crear', teacherController.registrarProfesor);
 

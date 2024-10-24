@@ -1,6 +1,51 @@
 const Profesor = require('../models/teacher');
 const bcrypt = require('bcrypt');
 
+//POST
+// http://localhost:3000/profesores/inicioSesionProfesor
+exports.inicioSesionProfesor = async (req, res) => {
+    const { nickname, contrasenia } = req.body;
+
+    if (!nickname || !contrasenia) {
+        return res.status(400).json({ 
+            status: 'error',
+            message: 'Nickname y contraseña son requeridos' 
+        });
+    }
+
+    Profesor.findOne({
+        where: { nickname }
+    }).then(async teacher => {
+        if (!teacher) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'No se ha encontrado el profesor'
+            });
+        }
+
+        const contraseniaValida = await bcrypt.compare(contrasenia, teacher.contrasenia);
+
+        if (!contraseniaValida) {
+            return res.status(401).json({
+                status: 'error',
+                message: 'Contraseña incorrecta'
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Inicio de sesión correcto',
+            profesor: teacher
+        });
+    }).catch(err => {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al iniciar sesión',
+            error: err
+        });
+    });
+}
+
 //GET
 // http://localhost:3000/profesores
 exports.listarProfesores = (req, res) => {
