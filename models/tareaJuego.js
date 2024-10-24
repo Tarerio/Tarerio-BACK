@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
+const Administrador = require("./admin");
 
 const TareaJuego = sequelize.define("TareaJuego", {
   ID_tarea: {
@@ -31,7 +32,6 @@ const TareaJuego = sequelize.define("TareaJuego", {
   },
 });
 
-// TODO: Add relationships when Administrator is created
-//TareaJuego.belongsTo(Administrador, { foreignKey: {name: 'creatorId',}});
+TareaJuego.belongsTo(Administrador, { foreignKey: {name: 'creatorId',}});
 
 module.exports = TareaJuego;

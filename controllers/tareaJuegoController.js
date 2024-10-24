@@ -1,4 +1,5 @@
 const TareaJuego = require("../models/tareaJuego");
+const AlumnoTareaJuego = require("../models/relations/alumnoTareaJuego");
 
 //GET
 //http://localhost:3000/tareaJuego/:id
@@ -40,7 +41,7 @@ exports.crearTareaJuego = (req, res) => {
     Descripcion: Descripcion,
     Fecha_estimada_cierre: Fecha_estimada_cierre,
     Enlace: Enlace,
-    // TODO creatorId: creatorId
+    creatorId: creatorId
   })
     .then((tareaJuego) => {
       res.status(201).json(tareaJuego);
@@ -55,7 +56,7 @@ exports.crearTareaJuego = (req, res) => {
 //http://localhost:3000/tareaJuego/:id
 exports.updateTareaJuego = (req, res) => {
   const { id } = req.params;
-  const { Titulo, Descripcion, Fecha_estimada_cierre, Enlace, creatorId } = req.body;
+  const { Titulo, Descripcion, Fecha_estimada_cierre, Enlace } = req.body;
   TareaJuego.update(
     {
         Titulo: Titulo,
