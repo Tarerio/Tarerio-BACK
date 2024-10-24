@@ -90,27 +90,17 @@ exports.obtenerAlumno = async (req, res) => {
 // http://localhost:3000/alumnos/create
 exports.registrarAlumno = (req, res) => {
     const { nickname, patron, perfil } = req.body;
-    const validChars = ['D', 'S', 'F', 'I'];//Dinosaurio, Superheroe, Figura, Insecto
-    const charIndices = [0, 2, 4, 6];
-    const numIndices = [1, 3, 5, 7];
-    
-    //Comprobar que los caracteres son igual a D,F,I,S y que los numeros estan entre 0 y 3
-    const areValidChar = charIndices.every(index => validChars.includes(patron.charAt(index)));
-    const areValidNums = numIndices.every(index => {
-        const char = patron.charAt(index);
-        const num = parseInt(char, 10);
-        return !isNaN(num) && num >= 0 && num <= 3;
-    });
+    const regex = /^([DSFI])([0-3])\1[0-3]\1[0-3]\1[0-3]$/;
 
     if (!nickname || !patron || !perfil) {
         return res.status(400).json({ 
             status: 'error',
             message: 'Nickname, contraseña y perfil son requeridos' 
         });
-    }else if(patron.length !== 8 || !areValidChar || !areValidNums){
-        return res.status(400).json({ 
+    }else if(!regex.test(patron)) {
+        return res.status(400).json({
             status: 'error',
-            message: 'El patron de la contraseña no es valido' 
+            message: 'El patrón no es válido'
         });
     }
 
