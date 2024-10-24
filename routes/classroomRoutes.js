@@ -1,7 +1,7 @@
 // routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
-const teacherController = require('../controllers/classroomController');
+const classroomController = require('../controllers/classroomController');
 
 //Endpoints de la API de aulas
 
