@@ -3,12 +3,12 @@ const sequelize = require('../config/database');
 
 /*
 {
-    "nickname" : "Pepe",
-    "patron" : "12345678@P"
+    "nickname":"juani",
+    "contrasenia":"@Jefadetaller1"
 }
-*/    
+*/
 
-const Profesor = sequelize.define('Profesor', {
+const Administrador = sequelize.define('Administrador', {
   id_usuario: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -26,4 +26,4 @@ const Profesor = sequelize.define('Profesor', {
   },
 });
 
-module.exports = Profesor;
+module.exports = Administrador;
