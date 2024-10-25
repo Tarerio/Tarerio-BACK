@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
+const Administrador = require("./admin");
 
 // ===================================================================
 //                        Modelo TareaPorPasos
@@ -61,8 +62,8 @@ const Subtarea = sequelize.define("Subtarea", {
 //                    Ralaciones entre modelos
 // ===================================================================
 
-// TODO: Add relationships when Administrator is created
-//TareaJuego.belongsTo(Administrador, { foreignKey: {name: 'creatorId',}});
+// ADD: when administrator is created
+//TareaPorPasos.belongsTo(Administrador, { foreignKey: {name: 'creatorId',}});
 
 TareaPorPasos.hasMany(Subtarea, {
   foreignKey: { name: "ID_tarea", allowNull: false },
