@@ -1,7 +1,7 @@
 // routes/userRoutes.js
 const express = require("express");
 const router = express.Router();
-const tareaPorPasosController = require("../controllers/tareaPorPasos");
+const tareaPorPasosController = require("../controllers/tareaPorPasosController");
 
 // GET by id
 // http://localhost:3000/tareaPorPasos/:id
