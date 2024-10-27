@@ -92,14 +92,18 @@ exports.registrarAlumno = (req, res) => {
     const { nickname, patron, perfil } = req.body;
     const regex = /^([DSFI])([0-3])\1[0-3]\1[0-3]\1[0-3]$/;
 
+    console.log('Pertición recibida:', req.body);
+
     if (!nickname || !patron || !perfil) {
         return res.status(400).json({ 
             status: 'error',
+            codigo_error: 1, //Codigo de error de falta de datos
             message: 'Nickname, contraseña y perfil son requeridos' 
         });
     }else if(!regex.test(patron)) {
         return res.status(400).json({
             status: 'error',
+            codigo_error: 2, //Codigo de error de formato no valido
             message: 'El patrón no es válido'
         });
     }
@@ -112,6 +116,7 @@ exports.registrarAlumno = (req, res) => {
     if(!texto && !imagenes && !pictograma && !video){
         return res.status(400).json({ 
             status: 'error',
+            codigo_error: 3, //Codigo de error de falta de perfil
             message: 'El alumno debe tener al menos un tipo de perfil' 
         });
     }
@@ -132,8 +137,8 @@ exports.registrarAlumno = (req, res) => {
     }).catch(err => {
         res.status(500).json({
             status: 'error',
+            codigo_error: 4, //Codigo de error de fallo al crear por duplicidad
             message: 'Error al crear el alumno',
-            error: err
         });
     });
 };

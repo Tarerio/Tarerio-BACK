@@ -104,16 +104,19 @@ exports.registrarProfesor = async (req, res) => {
     if (!nickname || !patron) {
         return res.status(400).json({ 
             status: 'error',
+            codigo_error: 1,
             message: 'Nickname y contraseña son requeridos' 
         });
     }else if(patron.length < 8){
         return res.status(400).json({ 
             status: 'error',
+            codigo_error: 2,
             message: 'La contraseña debe tener al menos 8 caracteres'
         });
     }else if (!regex.test(patron)) {
         return res.status(400).json({
             status: 'error',
+            codigo_error: 3,
             message: 'La contraseña debe contener al menos una mayúscula, un número y un carácter especial'
         });
     }
@@ -133,6 +136,7 @@ exports.registrarProfesor = async (req, res) => {
     }).catch(err => {
         res.status(500).json({
             status: 'error',
+            codigo_error: 4,
             message: 'Error al crear el profesor',
             error: err
         });
