@@ -9,4 +9,16 @@ const classroomController = require('../controllers/classroomController');
 // http://localhost:3000/aulas/create
 router.post('/crear', classroomController.crearAula);
 
+//GET
+// http://localhost:3000/aulas/:id_aula
+router.get('/:id_aula', classroomController.obtenerAula);
+
+//PUT
+// http://localhost:3000/aulas/:id_aula
+router.put('/:id_aula', classroomController.actualizarAula);
+
+//DELETE
+// http://localhost:3000/aulas/:id_aula
+router.delete('/:id_aula', classroomController.eliminarAula);
+
 module.exports = router;
