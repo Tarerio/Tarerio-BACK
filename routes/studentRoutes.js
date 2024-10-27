@@ -5,8 +5,8 @@ const studentController = require('../controllers/studentController');
 
 //Endpoints de la API de alumnos
 
-//GET
-router.get('/inicioSesionAlumno', studentController.inicioSesionAlumno); // http://localhost:3000/alumnos/inicioSesionAlumno?patron=D2D0D2D0
+//POST
+router.post('/inicioSesionAlumno', studentController.inicioSesionAlumno); 
 
 //POST
 // http://localhost:3000/alumnos/create

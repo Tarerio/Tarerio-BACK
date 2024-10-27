@@ -1,33 +1,21 @@
 const Alumno = require('../models/student');
 
-//GET iniciar sesión pasando en url como argumentos nickname
+// POST iniciar sesión pasando en el cuerpo de la solicitud nickname y patron
 // http://localhost:3000/alumnos/inicioSesionAlumno
 
 exports.inicioSesionAlumno = (req, res) => {
     // Simulación de inicio de sesión
-    const { patron } = req.query;
+    const { nickname, patron } = req.body;
 
-    //insertar usuario de prueba
-    /*
-     Alumno.create({
-        nickname: 'paquito galaxia',
-        contrasenia: 'D2D0D2D0'
-    }).then(alumno => {
-        console.log('Usuario creado:', alumno);
-    }).catch(err => {
-        console.error('Error al crear el usuario:', err);
-    });  
-    */  
-
-    // Ver si ese patrón existe en el sistema, si existe, entonces inicio de sesión exitoso
-
+    // Ver si el nickname y el patrón existen en el sistema, si existen, entonces inicio de sesión exitoso
     Alumno.findOne({
         where: {
+            nickname: nickname,
             contrasenia: patron
         }
     }).then(alumno => {
         if (alumno) {
-            res.status(200).json({ message: 'Inicio de sesión exitoso, el patrón existe en el sistema', alumno : alumno });
+            res.status(200).json({ message: 'Inicio de sesión exitoso, el patrón existe en el sistema', alumno: alumno });
         } else {
             res.status(401).json({ message: 'Credenciales incorrectas' });
         }
@@ -35,7 +23,6 @@ exports.inicioSesionAlumno = (req, res) => {
         console.error('Error al buscar el usuario:', err);
         res.status(500).json({ message: 'Error al buscar el usuario' });
     });
-
 };
 
 //GET
