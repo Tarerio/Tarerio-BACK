@@ -11,12 +11,12 @@ exports.crearAula = async (req, res) => {
             status: 'error',
             message: 'Clave y cupo requeridos' 
         });
-    }else if(clave.length > 0){
+    }else if(clave.length < 0){
         return res.status(400).json({ 
             status: 'error',
             message: 'La clave del aula debe de tener al menos un caracter'
         });
-    }else if(capacidad > 0){
+    }else if(capacidad <= 0){
         return res.status(400).json({ 
             status: 'error',
             message: 'El cupo debe de ser un numero positivo'
