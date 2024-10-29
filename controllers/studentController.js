@@ -76,7 +76,7 @@ exports.obtenerAlumno = async (req, res) => {
 //POST
 // http://localhost:3000/alumnos/create
 exports.registrarAlumno = (req, res) => {
-    const { nickname, patron, perfil } = req.body;
+    const { nickname, patron, perfil,image } = req.body;
     const regex = /^([DSFI])([0-3])\1[0-3]\1[0-3]\1[0-3]$/;
 
     console.log('Pertición recibida:', req.body);
@@ -114,7 +114,8 @@ exports.registrarAlumno = (req, res) => {
         texto: texto,
         imagenes: imagenes,
         pictograma: pictograma,
-        video: video
+        video: video,
+        imagenBase64 : image
     }).then(student => {
         res.status(201).json({
             status: 'success',
@@ -122,6 +123,7 @@ exports.registrarAlumno = (req, res) => {
             alumno: student,
         });
     }).catch(err => {
+        console.log(err);
         res.status(500).json({
             status: 'error',
             codigo_error: 4, //Codigo de error de fallo al crear por duplicidad
@@ -133,7 +135,7 @@ exports.registrarAlumno = (req, res) => {
 //PUT
 // http://localhost:3000/alumnos/:id_usuario
 exports.actualizarAlumno = (req, res) => {
-    const { nickname, patron, perfil } = req.body;
+    const { nickname, patron, perfil, image } = req.body;
     const { id_usuario } = req.params;
 
     const texto = perfil.texto || false;
@@ -164,7 +166,8 @@ exports.actualizarAlumno = (req, res) => {
             texto: texto,
             imagenes: imagenes,
             pictograma: pictograma,
-            video: video
+            video: video,
+            imagenBase64 : image
         });
     }).then(updatedStudent => {
         res.status(201).json({

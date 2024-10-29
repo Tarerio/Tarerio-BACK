@@ -5,17 +5,17 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTable('Aulas', {
         id_aula: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           autoIncrement: true,
           primaryKey: true
         },
         clave_aula: {
-          type: DataTypes.STRING,
+          type: Sequelize.STRING,
           allowNull: false,
           unique: true
         },
         cupo: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           unique: false
         },

@@ -37,6 +37,11 @@ const Alumno = sequelize.define('Alumno', {
     allowNull: true,
     unique: false
   },
+  imagenBase64: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    unique: false
+  }
 });
 
 module.exports = Alumno;
