@@ -60,7 +60,7 @@ Este es el árbol de directorios de la primera iteración del proyecto:
       ├── tareaJuegoRoutes.js
       ├── tareaPorPasosRoutes.js
       └── teacherRoutes.js
-
+```
 ## Tecnologías Utilizadas
 
 - **Node.js**: Entorno de ejecución para el backend.
