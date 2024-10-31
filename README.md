@@ -22,44 +22,44 @@ TARERIO es una aplicación backend diseñada para gestionar tareas y agendas de 
 ## Estructura del Proyecto
 
 Este es el árbol de directorios de la primera iteración del proyecto:
-
-.
-├── app.js                          # Archivo principal de inicio de la aplicación
-├── config                          
-│   ├── config.js                   # Configuración general de la aplicación
-│   └── database.js                 # Configuración de la base de datos
-├── controllers                     # Controladores de las distintas entidades
-│   ├── adminController.js
-│   ├── classroomController.js
-│   ├── studentController.js
-│   ├── tareaJuegoController.js
-│   ├── tareaPorPasosController.js
-│   └── teacherController.js
-├── migrations                      # Archivos de migración para el esquema de la base de datos
-│   ├── 20241022174341-alumno-model.js
-│   ├── 20241023143901-profesor-model.js
-│   ├── 20241024112344-aulas-model.js
-│   ├── 20241028160544-add-imagenBase64-to-alumnos.js
-│   └── 20241028161916-add-imagenBase64-to-profesores.js
-├── models                          # Definiciones de los modelos de datos
-│   ├── admin.js
-│   ├── classroom.js
-│   ├── relations
-│   │   └── alumnoTareaJuego.js
-│   ├── student.js
-│   ├── tareaJuego.js
-│   ├── tareaPorPasos.js
-│   └── teacher.js
-├── package.json                    # Archivo de configuración de dependencias
-├── package-lock.json
-├── README.md                       # Documentación del proyecto
-└── routes                          # Rutas de las distintas funcionalidades
-    ├── adminRoutes.js
-    ├── classroomRoutes.js
-    ├── studentRoutes.js
-    ├── tareaJuegoRoutes.js
-    ├── tareaPorPasosRoutes.js
-    └── teacherRoutes.js
+   ```bash
+   .
+   ├── app.js                          # Archivo principal de inicio de la aplicación
+   ├── config                          
+   │   ├── config.js                   # Configuración general de la aplicación
+   │   └── database.js                 # Configuración de la base de datos
+   ├── controllers                     # Controladores de las distintas entidades
+   │   ├── adminController.js
+   │   ├── classroomController.js
+   │   ├── studentController.js
+   │   ├── tareaJuegoController.js
+   │   ├── tareaPorPasosController.js
+   │   └── teacherController.js
+   ├── migrations                      # Archivos de migración para el esquema de la base de datos
+   │   ├── 20241022174341-alumno-model.js
+   │   ├── 20241023143901-profesor-model.js
+   │   ├── 20241024112344-aulas-model.js
+   │   ├── 20241028160544-add-imagenBase64-to-alumnos.js
+   │   └── 20241028161916-add-imagenBase64-to-profesores.js
+   ├── models                          # Definiciones de los modelos de datos
+   │   ├── admin.js
+   │   ├── classroom.js
+   │   ├── relations
+   │   │   └── alumnoTareaJuego.js
+   │   ├── student.js
+   │   ├── tareaJuego.js
+   │   ├── tareaPorPasos.js
+   │   └── teacher.js
+   ├── package.json                    # Archivo de configuración de dependencias
+   ├── package-lock.json
+   ├── README.md                       # Documentación del proyecto
+   └── routes                          # Rutas de las distintas funcionalidades
+      ├── adminRoutes.js
+      ├── classroomRoutes.js
+      ├── studentRoutes.js
+      ├── tareaJuegoRoutes.js
+      ├── tareaPorPasosRoutes.js
+      └── teacherRoutes.js
 
 ## Tecnologías Utilizadas
 
