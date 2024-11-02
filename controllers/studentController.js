@@ -1,33 +1,21 @@
 const Alumno = require('../models/student');
 
-//GET iniciar sesión pasando en url como argumentos nickname
+// POST iniciar sesión pasando en el cuerpo de la solicitud nickname y patron
 // http://localhost:3000/alumnos/inicioSesionAlumno
 
 exports.inicioSesionAlumno = (req, res) => {
     // Simulación de inicio de sesión
-    const { patron } = req.query;
+    const { nickname, patron } = req.body;
 
-    //insertar usuario de prueba
-    /*
-     Alumno.create({
-        nickname: 'paquito galaxia',
-        contrasenia: 'D2D0D2D0'
-    }).then(alumno => {
-        console.log('Usuario creado:', alumno);
-    }).catch(err => {
-        console.error('Error al crear el usuario:', err);
-    });  
-    */  
-
-    // Ver si ese patrón existe en el sistema, si existe, entonces inicio de sesión exitoso
-
+    // Ver si el nickname y el patrón existen en el sistema, si existen, entonces inicio de sesión exitoso
     Alumno.findOne({
         where: {
+            nickname: nickname,
             contrasenia: patron
         }
     }).then(alumno => {
         if (alumno) {
-            res.status(200).json({ message: 'Inicio de sesión exitoso, el patrón existe en el sistema', alumno : alumno });
+            res.status(200).json({ message: 'Inicio de sesión exitoso, el patrón existe en el sistema', alumno: alumno });
         } else {
             res.status(401).json({ message: 'Credenciales incorrectas' });
         }
@@ -35,7 +23,6 @@ exports.inicioSesionAlumno = (req, res) => {
         console.error('Error al buscar el usuario:', err);
         res.status(500).json({ message: 'Error al buscar el usuario' });
     });
-
 };
 
 //GET
@@ -89,28 +76,22 @@ exports.obtenerAlumno = async (req, res) => {
 //POST
 // http://localhost:3000/alumnos/create
 exports.registrarAlumno = (req, res) => {
-    const { nickname, patron, perfil } = req.body;
-    const validChars = ['D', 'S', 'F', 'I'];//Dinosaurio, Superheroe, Figura, Insecto
-    const charIndices = [0, 2, 4, 6];
-    const numIndices = [1, 3, 5, 7];
-    
-    //Comprobar que los caracteres son igual a D,F,I,S y que los numeros estan entre 0 y 3
-    const areValidChar = charIndices.every(index => validChars.includes(patron.charAt(index)));
-    const areValidNums = numIndices.every(index => {
-        const char = patron.charAt(index);
-        const num = parseInt(char, 10);
-        return !isNaN(num) && num >= 0 && num <= 3;
-    });
+    const { nickname, patron, perfil,image } = req.body;
+    const regex = /^([DSFI])([0-3])\1[0-3]\1[0-3]\1[0-3]$/;
+
+    console.log('Pertición recibida:', req.body);
 
     if (!nickname || !patron || !perfil) {
         return res.status(400).json({ 
             status: 'error',
+            codigo_error: 1, //Codigo de error de falta de datos
             message: 'Nickname, contraseña y perfil son requeridos' 
         });
-    }else if(patron.length !== 8 || !areValidChar || !areValidNums){
-        return res.status(400).json({ 
+    }else if(!regex.test(patron)) {
+        return res.status(400).json({
             status: 'error',
-            message: 'El patron de la contraseña no es valido' 
+            codigo_error: 2, //Codigo de error de formato no valido
+            message: 'El patrón no es válido'
         });
     }
 
@@ -122,6 +103,7 @@ exports.registrarAlumno = (req, res) => {
     if(!texto && !imagenes && !pictograma && !video){
         return res.status(400).json({ 
             status: 'error',
+            codigo_error: 3, //Codigo de error de falta de perfil
             message: 'El alumno debe tener al menos un tipo de perfil' 
         });
     }
@@ -132,7 +114,8 @@ exports.registrarAlumno = (req, res) => {
         texto: texto,
         imagenes: imagenes,
         pictograma: pictograma,
-        video: video
+        video: video,
+        imagenBase64 : image
     }).then(student => {
         res.status(201).json({
             status: 'success',
@@ -140,10 +123,11 @@ exports.registrarAlumno = (req, res) => {
             alumno: student,
         });
     }).catch(err => {
+        console.log(err);
         res.status(500).json({
             status: 'error',
+            codigo_error: 4, //Codigo de error de fallo al crear por duplicidad
             message: 'Error al crear el alumno',
-            error: err
         });
     });
 };
@@ -151,7 +135,7 @@ exports.registrarAlumno = (req, res) => {
 //PUT
 // http://localhost:3000/alumnos/:id_usuario
 exports.actualizarAlumno = (req, res) => {
-    const { nickname, patron, perfil } = req.body;
+    const { nickname, patron, perfil, image } = req.body;
     const { id_usuario } = req.params;
 
     const texto = perfil.texto || false;
@@ -182,7 +166,8 @@ exports.actualizarAlumno = (req, res) => {
             texto: texto,
             imagenes: imagenes,
             pictograma: pictograma,
-            video: video
+            video: video,
+            imagenBase64 : image
         });
     }).then(updatedStudent => {
         res.status(201).json({

@@ -5,18 +5,18 @@ const tareaPorPasosController = require("../controllers/tareaPorPasosController"
 
 // GET by id
 // http://localhost:3000/tareaPorPasos/:id
-router.get("/tareaPorPasos/:id", tareaPorPasosController.getTareaPorPasosById);
+router.get("/:id", tareaPorPasosController.getTareaPorPasosById);
 
 // GET all
 // http://localhost:3000/tareaPorPasos
-router.get("/tareaPorPasos", tareaPorPasosController.getAllTareaPorPasos);
+router.get("", tareaPorPasosController.getAllTareaPorPasos);
 
 // POST create a StepsTask
 // http://localhost:3000/tareaPorPasos
-router.post("/tareaPorPasos", tareaPorPasosController.crearTareaPorPasos);
+router.post("", tareaPorPasosController.crearTareaPorPasos);
 
 // PUT update StepsTask by id
 // http://localhost:3000/tareaPorPasos/:id
-router.put("/tareaPorPasos/:id", tareaPorPasosController.updateTareaPorPasos);
+router.put("/:id", tareaPorPasosController.updateTareaPorPasos);
 
 module.exports = router;

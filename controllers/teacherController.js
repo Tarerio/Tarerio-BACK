@@ -97,23 +97,28 @@ exports.obtenerProfesor = async (req, res) => {
 //POST
 // http://localhost:3000/profesores/create
 exports.registrarProfesor = async (req, res) => {
-    const { nickname, patron} = req.body;
+    const { nickname, patron, image} = req.body;
     const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).+$/;
+
+    console.log(req.body);
 
 
     if (!nickname || !patron) {
         return res.status(400).json({ 
             status: 'error',
+            codigo_error: 1,
             message: 'Nickname y contraseña son requeridos' 
         });
     }else if(patron.length < 8){
         return res.status(400).json({ 
             status: 'error',
+            codigo_error: 2,
             message: 'La contraseña debe tener al menos 8 caracteres'
         });
     }else if (!regex.test(patron)) {
         return res.status(400).json({
             status: 'error',
+            codigo_error: 3,
             message: 'La contraseña debe contener al menos una mayúscula, un número y un carácter especial'
         });
     }
@@ -124,6 +129,7 @@ exports.registrarProfesor = async (req, res) => {
     Profesor.create({
         nickname: nickname,
         contrasenia: hashedPatron,
+        imagenBase64 : image
     }).then(teacher => {
         res.status(201).json({
             status: 'success',
@@ -131,8 +137,10 @@ exports.registrarProfesor = async (req, res) => {
             profesor: teacher,
         });
     }).catch(err => {
+        console.log(err);
         res.status(500).json({
             status: 'error',
+            codigo_error: 4,
             message: 'Error al crear el profesor',
             error: err
         });
@@ -142,7 +150,7 @@ exports.registrarProfesor = async (req, res) => {
 //PUT
 // http://localhost:3000/profesores/:id_usuario
 exports.actualizarProfesor = (req, res) => {
-    const { nickname, patron } = req.body;
+    const { nickname, patron, image } = req.body;
     const { id_usuario } = req.params;
     const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).+$/;
 
@@ -174,6 +182,7 @@ exports.actualizarProfesor = (req, res) => {
         return teacher.update({
             nickname: nickname,
             contrasenia: hashedPatron,
+            imagenBase64: image
         });
     }).then(updatedTeacher => {
         res.status(201).json({

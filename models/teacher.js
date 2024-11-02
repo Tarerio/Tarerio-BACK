@@ -24,6 +24,13 @@ const Profesor = sequelize.define('Profesor', {
     allowNull: false,
     unique: false
   },
+  imagenBase64: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    unique: false
+  }
+},{
+  tableName: 'Profesores'
 });
 
 module.exports = Profesor;

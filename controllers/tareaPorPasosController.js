@@ -1,4 +1,5 @@
-const { TareaPorPasos, Subtarea, sequelize } = require("../models/tareaPorPasos");
+const { TareaPorPasos, Subtarea } = require("../models/tareaPorPasos");
+const sequelize = require('../config/database');
 
 //GET 
 // Una tarea por su ID
@@ -8,8 +9,8 @@ exports.getTareaPorPasosById = (req, res) => {
     TareaPorPasos.findOne({
         where: {
             ID_tarea: id,
-            include: [{ model: Subtarea }] // Subtareas de la tarea
         },
+        include: [{ model: Subtarea }] // Subtareas de la tarea
     })
         .then((tareaPorPasos) => {
             res.status(200).json(tareaPorPasos);
@@ -42,39 +43,40 @@ exports.getAllTareaPorPasos = (req, res) => {
 exports.crearTareaPorPasos = async (req, res) => {
     const { Titulo, Descripcion, Fecha_estimada_cierre, subtareas } = req.body;
 
+    console.log("Datos recibidos:", req.body);
+
     // Iniciar una transacción
-    const transaccion = await sequelize.transaction();
+    const transaction = await sequelize.transaction();
 
     try {
-        // Crear la tarea
+        // Crear la tarea 
         const nuevaTareaPorPasos = await TareaPorPasos.create({
             Titulo,
             Descripcion,
             Fecha_estimada_cierre
-        },
-            { transaction: transaccion }, // Indicamos que es en transacción por si hace falta hacer rollback
-        );
+        }, { transaction });
 
-        // Creamos las subtareas asociadas a la tarea
+        // Crear las subtareas asociadas a la tarea
         const subtareasConIDTarea = subtareas.map(subtarea => ({
             ...subtarea,
-            ID_tarea: nuevaTareaPorPasos.ID_tarea // Asignar el ID de la tarea a cada subtarea
+            ID_tarea: nuevaTareaPorPasos.ID_tarea
         }));
 
-        await Subtarea.bulkCreate(subtareasConIDTarea, { transaction }); // Crear todas las subtareas en una sola llamada
+        console.log("Subtareas con ID de tarea:", subtareasConIDTarea);
 
-        // Una vez creadas todas las subtareas, confirmamos la transacción
+        // Crear las subtareas
+        await Subtarea.bulkCreate(subtareasConIDTarea, { transaction });
+
+        // Confirmar la transacción
         await transaction.commit();
 
         res.status(201).json(nuevaTareaPorPasos);
     } catch (err) {
         // Revertir la transacción en caso de error
         if (transaction) await transaction.rollback();
-
         console.error("Error al crear la tarea por pasos:", err);
         res.status(500).json({ message: "Error al crear la tarea y las subtareas" });
     }
-
 };
 
 //PUT
@@ -85,7 +87,7 @@ exports.updateTareaPorPasos = async (req, res) => {
     const { Titulo, Descripcion, Fecha_estimada_cierre, subtareas } = req.body;
 
     // Iniciar una transacción
-    const transaccion = await sequelize.transaction();
+    const transaction = await sequelize.transaction();
 
     try {
 
@@ -97,12 +99,12 @@ exports.updateTareaPorPasos = async (req, res) => {
             return;
         }
 
-        await tarea.update({ // Actualizar la tarea
+        await tareaPorPasos.update({ // Actualizar la tarea
             Titulo,
             Descripcion,
             Fecha_estimada_cierre
         },
-            { transaccion }
+            { transaction }
         );
 
         // SUBTAREAS
@@ -127,7 +129,7 @@ exports.updateTareaPorPasos = async (req, res) => {
                         ID_subtarea: subtareasAEliminar,
                         ID_tarea: id
                     },
-                    transaccion
+                    transaction
                 });
             }
 
@@ -143,24 +145,24 @@ exports.updateTareaPorPasos = async (req, res) => {
                             Imagen: subtarea.Imagen,
                             Pictograma: subtarea.Pictograma,
                             Video: subtarea.Video
-                        }, { transaccion });
+                        }, { transaction });
                     }
                 } else {
                     await Subtarea.create({ // Agregar
                         ...subtarea,
                         ID_tarea: id
-                    }, { transaccion });
+                    }, { transaction });
                 }
             }
         }
 
         // Una vez actualizada la tarea y las subtareas confirmamos la transacción
-        await transaccion.commit();
+        await transaction.commit();
 
-        res.status(201).json(nuevaTareaPorPasos);
+        res.status(200).json(tareaPorPasos); // Cambié la respuesta a la tarea actualizada
     } catch (err) {
         // Revertir la transacción en caso de error
-        if (transaccion) await transaccion.rollback();
+        if (transaction) await transaction.rollback();
 
         console.error("Error al crear la tarea por pasos:", err);
         res.status(500).json({ message: "Error al crear la tarea y las subtareas" });

@@ -9,8 +9,8 @@ const adminRoutes = require('./routes/adminRoutes');
 const classroomRoutes = require('./routes/classroomRoutes');
 require('dotenv').config();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({limit: '5mb'}));
+app.use(express.urlencoded({limit: '5mb', extended: true }));
 
 // Las rutas
 app.use('/alumnos', studentRoutes);
