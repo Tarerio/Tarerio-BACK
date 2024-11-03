@@ -29,4 +29,8 @@ router.put('/:id_usuario', teacherController.actualizarProfesor);
 // http://localhost:3000/profesores/:id_usuario
 router.delete('/:id_usuario', teacherController.eliminarProfesor);
 
+//PUT
+// http://localhost:3000/profesores/:id_usuario/cambiarContrasenia
+router.put('/:id_usuario/cambiarContrasenia', teacherController.cambiarContrasenia);
+
 module.exports = router;
