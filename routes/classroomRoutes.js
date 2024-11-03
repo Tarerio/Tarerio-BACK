@@ -7,11 +7,15 @@ const classroomController = require('../controllers/classroomController');
 
 //POST
 // http://localhost:3000/aulas/create
-router.post('/crear', classroomController.crearAula);
+router.post('/create', classroomController.crearAula);
 
 //GET
 // http://localhost:3000/aulas/:id_aula
 router.get('/:id_aula', classroomController.obtenerAula);
+
+//GET
+// http://localhost:3000/aulas
+router.get("/", classroomController.obtenerAulas);
 
 //PUT
 // http://localhost:3000/aulas/:id_aula

@@ -71,6 +71,26 @@ exports.obtenerAula = async (req, res) => {
 
 };
 
+// GET
+// http://localhost:3000/aulas
+exports.obtenerAulas = async (req, res) => {
+    Aula.findAll() // Recupera todos los atributos de cada aula
+    .then(aulas => {        
+        res.status(200).json({
+            status: 'success',
+            message: 'Aulas obtenidas correctamente',
+            aulas: aulas
+        });
+    })
+    .catch(err => {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al obtener las aulas',
+            error: err
+        });
+    });
+};
+
 //PUT
 // http://localhost:3000/aulas/:id_aula
 exports.actualizarAula = async (req, res) => {
