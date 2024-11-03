@@ -43,8 +43,6 @@ exports.getAllTareaPorPasos = (req, res) => {
 exports.crearTareaPorPasos = async (req, res) => {
     const { Titulo, Descripcion, Fecha_estimada_cierre, subtareas } = req.body;
 
-    console.log("Datos recibidos:", req.body);
-
     // Iniciar una transacción
     const transaction = await sequelize.transaction();
 
@@ -61,8 +59,6 @@ exports.crearTareaPorPasos = async (req, res) => {
             ...subtarea,
             ID_tarea: nuevaTareaPorPasos.ID_tarea
         }));
-
-        console.log("Subtareas con ID de tarea:", subtareasConIDTarea);
 
         // Crear las subtareas
         await Subtarea.bulkCreate(subtareasConIDTarea, { transaction });
@@ -159,7 +155,7 @@ exports.updateTareaPorPasos = async (req, res) => {
         // Una vez actualizada la tarea y las subtareas confirmamos la transacción
         await transaction.commit();
 
-        res.status(200).json(tareaPorPasos); // Cambié la respuesta a la tarea actualizada
+        res.status(200).json(tareaPorPasos);
     } catch (err) {
         // Revertir la transacción en caso de error
         if (transaction) await transaction.rollback();
