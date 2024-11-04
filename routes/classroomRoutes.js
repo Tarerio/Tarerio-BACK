@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const classroomController = require('../controllers/classroomController');
-
+ 
 //Endpoints de la API de aulas
 
 //POST
@@ -24,5 +24,9 @@ router.put('/:id_aula', classroomController.actualizarAula);
 //DELETE
 // http://localhost:3000/aulas/:id_aula
 router.delete('/:id_aula', classroomController.eliminarAula);
+
+//POST
+// http://localhost:3000/aulas/asignar-profesor
+router.post('/asignar-profesor', classroomController.asignarProfesor)
 
 module.exports = router;
