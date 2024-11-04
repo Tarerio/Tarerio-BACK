@@ -1,23 +1,25 @@
-const Aula = require('../models/classroom');
 const bcrypt = require('bcrypt');
+const Aula = require('../models/classroom');
+const Profesor = require('../models/teacher');
+const AulaProfesor = require('../models/relations/AulaProfesor');
 
 //POST
 // http://localhost:3000/aulas/create
 exports.crearAula = async (req, res) => {
-    const { clave, capacidad} = req.body;
+    const { clave, capacidad } = req.body;
 
     if (!clave || !capacidad) {
-        return res.status(400).json({ 
+        return res.status(400).json({
             status: 'error',
-            message: 'Clave y cupo requeridos' 
+            message: 'Clave y cupo requeridos'
         });
-    }else if(clave.length < 0){
-        return res.status(400).json({ 
+    } else if (clave.length < 0) {
+        return res.status(400).json({
             status: 'error',
             message: 'La clave del aula debe de tener al menos un caracter'
         });
-    }else if(capacidad <= 0){
-        return res.status(400).json({ 
+    } else if (capacidad <= 0) {
+        return res.status(400).json({
             status: 'error',
             message: 'El cupo debe de ser un numero positivo'
         });
@@ -56,7 +58,7 @@ exports.obtenerAula = async (req, res) => {
                 status: 'error',
                 message: 'No se ha encontrado el aula'
             });
-        }else{
+        } else {
             return res.status(200).json({
                 status: 'success',
                 message: 'Aula obtenida correctamente',
@@ -73,41 +75,39 @@ exports.obtenerAula = async (req, res) => {
 
 };
 
-//GET
+// GET
 // http://localhost:3000/aulas
-exports.listarAulas = async (req, res) => {
-    Aula.findAll().then(classrooms => {
-        res.status(200).json({
-            status: 'success',
-            message: 'Aulas obtenidos correctamente',
-            aulas: classrooms,
+exports.obtenerAulas = async (req, res) => {
+    Aula.findAll() // Recupera todos los atributos de cada aula
+        .then(aulas => {
+            res.status(200).json({
+                status: 'success',
+                message: 'Aulas obtenidas correctamente',
+                aulas: aulas
+            });
+        })
+        .catch(err => {
+            res.status(500).json({
+                status: 'error',
+                message: 'Error al obtener las aulas',
+                error: err
+            });
         });
-        return;
-    }).catch(err => {
-        res.status(500).json({
-            status: 'error',
-            message: 'Error al obtener las Aulas',
-            error: err
-        });
-        return;
-    });
-
 };
 
-//ESTA ROTO POR ALGUNA RAZON
 //PUT
 // http://localhost:3000/aulas/:id_aula
 exports.actualizarAula = async (req, res) => {
-    const { clave, capacidad} = req.body;
+    const { clave, capacidad } = req.body;
     const { id_aula } = req.params;
 
-    if(clave.length < 0){
-        return res.status(400).json({ 
+    if (clave.length < 0) {
+        return res.status(400).json({
             status: 'error',
             message: 'La clave del aula debe de tener al menos un caracter'
         });
-    }else if(capacidad <= 0){
-        return res.status(400).json({ 
+    } else if (capacidad <= 0) {
+        return res.status(400).json({
             status: 'error',
             message: 'El cupo debe de ser un numero positivo'
         });
@@ -173,3 +173,31 @@ exports.eliminarAula = (req, res) => {
         return;
     });
 }
+
+//POST
+// http://localhost:3000/aulas/asignar-profesor
+exports.asignarProfesor = (req, res) => {
+    const { id_aula, id_usuario } = req.body;
+
+    Aula.findByPk(id_aula)
+        .then(aula => {
+            if (!aula) {
+                return res.status(404).json({ message: 'Aula no encontrada' });
+            }
+
+            return Profesor.findByPk(id_usuario)
+                .then(profesor => {
+                    if (!profesor) {
+                        return res.status(404).json({ message: 'Profesor no encontrado' });
+                    }
+                    return AulaProfesor.create({ id_aula, id_usuario });
+                })
+                .then(() => {
+                    res.status(200).json({ message: 'Profesor asignado al aula exitosamente' });
+                });
+        })
+        .catch(error => {
+            console.error('Error al asignar profesor:', error);
+            res.status(500).json({ message: 'Error al asignar profesor', error });
+        });
+};
