@@ -210,3 +210,62 @@ exports.eliminarProfesor = (req, res) => {
         });
     });
 }
+
+// PUT
+// http://localhost:3000/profesores/:id_usuario/cambiarContrasenia
+exports.cambiarContrasenia = async (req, res) => {
+    const { id_usuario } = req.params;
+    const { contraseniaActual, contraseniaNueva } = req.body;
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).+$/;
+
+    if(contraseniaNueva.length < 8) {
+        return res.status(400).json({ 
+            status: 'error',
+            message: 'La contraseña debe tener al menos 8 caracteres' 
+        });
+    }else if (contraseniaNueva && !regex.test(contraseniaNueva)) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'La contraseña debe contener al menos una mayúscula, un número y un carácter especial'
+        });
+    }
+
+    Profesor.findOne({
+        where: { id_usuario }
+    }).then(async teacher => {
+        if (!teacher) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'No se ha encontrado el profesor'
+            });
+        }
+
+        const contraseniaValida = await bcrypt.compare(contraseniaActual, teacher.contrasenia);
+
+        if (!contraseniaValida) {
+            return res.status(401).json({
+                status: 'error',
+                message: 'Contraseña incorrecta'
+            });
+        }
+
+        const coste = 1; 
+        const hashedPatron = await bcrypt.hash(contraseniaNueva, coste);
+
+        teacher.update({
+            contrasenia: hashedPatron
+        }).then(updatedTeacher => {
+            res.status(201).json({
+                status: 'success',
+                message: 'Contraseña actualizada correctamente',
+                profesor: updatedTeacher
+            });
+        });
+    }).catch(err => {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al cambiar la contraseña',
+            error: err
+        });
+    });
+}
