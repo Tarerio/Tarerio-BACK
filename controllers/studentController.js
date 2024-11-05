@@ -79,8 +79,6 @@ exports.registrarAlumno = (req, res) => {
     const { nickname, patron, perfil,image } = req.body;
     const regex = /^([DSFI])([0-3])\1[0-3]\1[0-3]\1[0-3]$/;
 
-    console.log('Pertición recibida:', req.body);
-
     if (!nickname || !patron || !perfil) {
         return res.status(400).json({ 
             status: 'error',
@@ -123,7 +121,6 @@ exports.registrarAlumno = (req, res) => {
             alumno: student,
         });
     }).catch(err => {
-        console.log(err);
         res.status(500).json({
             status: 'error',
             codigo_error: 4, //Codigo de error de fallo al crear por duplicidad

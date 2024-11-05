@@ -100,9 +100,6 @@ exports.registrarProfesor = async (req, res) => {
     const { nickname, patron, image} = req.body;
     const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).+$/;
 
-    console.log(req.body);
-
-
     if (!nickname || !patron) {
         return res.status(400).json({ 
             status: 'error',
@@ -137,7 +134,6 @@ exports.registrarProfesor = async (req, res) => {
             profesor: teacher,
         });
     }).catch(err => {
-        console.log(err);
         res.status(500).json({
             status: 'error',
             codigo_error: 4,
@@ -150,21 +146,9 @@ exports.registrarProfesor = async (req, res) => {
 //PUT
 // http://localhost:3000/profesores/:id_usuario
 exports.actualizarProfesor = (req, res) => {
-    const { nickname, patron, image } = req.body;
+    const { nickname, image } = req.body;
     const { id_usuario } = req.params;
     const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).+$/;
-
-    if(patron && patron.length < 8) {
-        return res.status(400).json({ 
-            status: 'error',
-            message: 'La contraseña debe tener al menos 8 caracteres' 
-        });
-    }else if (patron && !regex.test(patron)) {
-        return res.status(400).json({
-            status: 'error',
-            message: 'La contraseña debe contener al menos una mayúscula, un número y un carácter especial'
-        });
-    }
 
     Profesor.findOne({
         where: { id_usuario }
@@ -182,7 +166,7 @@ exports.actualizarProfesor = (req, res) => {
         return teacher.update({
             nickname: nickname,
             contrasenia: hashedPatron,
-            imagenBase64: image
+            imagenBase64: image??teacher.imagenBase64
         });
     }).then(updatedTeacher => {
         res.status(201).json({
