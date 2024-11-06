@@ -20,6 +20,10 @@ router.get('', studentController.listarAlumnos);
 // http://localhost:3000/alumnos/:id_usuario
 router.get('/:id_usuario', studentController.obtenerAlumno);
 
+//GET
+// http://localhost:3000/alumnos/nickname/:nickname
+router.get('/nickname/:nickname', studentController.obtenerAlumnoByNickname);
+
 //PUT
 // http://localhost:3000/alumnos/:id_usuario
 router.put('/:id_usuario', studentController.actualizarAlumno);

@@ -8,10 +8,13 @@ const tareaPorPasosRoutes = require('./routes/tareaPorPasosRoutes');
 const tareaPeticionRoutes = require('./routes/tareaPeticionRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const classroomRoutes = require('./routes/classroomRoutes');
+const morgan = require('morgan');
 require('dotenv').config();
 
 app.use(express.json({limit: '5mb'}));
 app.use(express.urlencoded({limit: '5mb', extended: true }));
+app.use(morgan("combined"));
+
 
 // Las rutas
 app.use('/alumnos', studentRoutes);

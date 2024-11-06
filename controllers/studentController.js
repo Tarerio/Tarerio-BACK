@@ -70,7 +70,35 @@ exports.obtenerAlumno = async (req, res) => {
             error: err
         });
     });
+};
 
+//GET
+// http://localhost:3000/alumnos/:nickname
+exports.obtenerAlumnoByNickname = async (req, res) => {
+    const { nickname } = req.params;
+
+    Alumno.findOne({
+        where: { nickname }
+    }).then(student => {
+        if (!student) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'No se ha encontrado el alumno'
+            });
+        }else{
+            res.status(200).json({
+                status: 'success',
+                message: 'Alumno obtenido correctamente',
+                alumno: student,
+            });
+        }
+    }).catch(err => {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al obtener el alumno',
+            error: err
+        });
+    });
 };
 
 //POST
