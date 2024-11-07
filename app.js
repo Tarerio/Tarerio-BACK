@@ -9,12 +9,16 @@ const tareaPeticionRoutes = require('./routes/tareaPeticionRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const classroomRoutes = require('./routes/classroomRoutes');
 const morgan = require('morgan');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./swaggerConfig');
 require('dotenv').config();
 
 app.use(express.json({limit: '5mb'}));
 app.use(express.urlencoded({limit: '5mb', extended: true }));
 app.use(morgan("combined"));
 
+// Ruta de swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // Las rutas
 app.use('/alumnos', studentRoutes);
