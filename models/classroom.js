@@ -17,6 +17,11 @@ const Aula = sequelize.define('Aula', {
     allowNull: false,
     unique: false
   },
+  imagenBase64: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    unique: false
+  }
 });
 
 module.exports = Aula;

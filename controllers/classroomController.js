@@ -6,7 +6,7 @@ const AulaProfesor = require('../models/relations/AulaProfesor');
 //POST
 // http://localhost:3000/aulas/create
 exports.crearAula = async (req, res) => {
-    const { clave, capacidad } = req.body;
+    const { clave, capacidad, image } = req.body;
 
     if (!clave || !capacidad) {
         return res.status(400).json({
@@ -28,6 +28,7 @@ exports.crearAula = async (req, res) => {
     Aula.create({
         clave_aula: clave,
         cupo: capacidad,
+        imagenBase64: image, 
     }).then(classroom => {
         res.status(201).json({
             status: 'success',
@@ -98,7 +99,7 @@ exports.obtenerAulas = async (req, res) => {
 //PUT
 // http://localhost:3000/aulas/:id_aula
 exports.actualizarAula = async (req, res) => {
-    const { clave, capacidad } = req.body;
+    const { clave, capacidad, image } = req.body;
     const { id_aula } = req.params;
 
     if (clave.length < 0) {
@@ -126,6 +127,7 @@ exports.actualizarAula = async (req, res) => {
         return classroom.update({
             clave_aula: clave,
             cupo: capacidad,
+            imageBase64: image ?? classroom.imageBase64,
         });
     }).then(updatedClassroom => {
         res.status(201).json({
