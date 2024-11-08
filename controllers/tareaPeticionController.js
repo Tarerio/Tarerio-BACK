@@ -144,26 +144,3 @@ exports.updateTareaPeticion = async (req, res) => {
         res.status(500).json({ error: "Error al actualizar la tarea" });
     }
 };
-
-/*
-// DELETE
-// Eliminar una tarea peticion
-// http://localhost:3000/tareaPeticion/:id
-exports.deleteTareaPeticion = async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const tareaPorPasos = await TareaPorPasos.findByPk(id);
-
-        if (!tareaPorPasos) {
-            return res.status(404).json({ message: "Tarea no encontrada" });
-        }
-
-        await tareaPorPasos.destroy();
-        res.status(200).json({ message: "Tarea eliminada correctamente" });
-    } catch (err) {
-        console.error("Error al eliminar la tarea:", err);
-        res.status(500).json({ message: "Error al eliminar la tarea" });
-    }
-};
-*/

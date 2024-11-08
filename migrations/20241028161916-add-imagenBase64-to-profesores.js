@@ -1,13 +1,15 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.addColumn('Profesores', 'imagenBase64', {
-      type: Sequelize.TEXT,
-      allowNull: true,
-      unique: false
-    });
+    // Verificar si la columna ya existe antes de añadirla
+    const tableInfo = await queryInterface.describeTable('Profesores');
+    if (!tableInfo.imagenBase64) {
+      await queryInterface.addColumn('Profesores', 'imagenBase64', {
+        type: Sequelize.STRING,
+        allowNull: true
+      });
+    }
   },
 
   async down (queryInterface, Sequelize) {
