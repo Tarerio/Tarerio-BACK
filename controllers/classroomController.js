@@ -28,7 +28,7 @@ exports.crearAula = async (req, res) => {
     Aula.create({
         clave_aula: clave,
         cupo: capacidad,
-        imagenBase64: image, 
+        imagenBase64: image,
     }).then(classroom => {
         res.status(201).json({
             status: 'success',
@@ -201,5 +201,28 @@ exports.asignarProfesor = (req, res) => {
         .catch(error => {
             console.error('Error al asignar profesor:', error);
             res.status(500).json({ message: 'Error al asignar profesor', error });
+        });
+};
+
+//GET
+//http://localhost:3000/aulas/:id_aula/profesores
+exports.profesoresAsignados = (req, res) => {
+    const { id_aula } = req.params;
+
+    AulaProfesor.findAll({
+        where: { id_aula: id_aula }
+    })
+        .then((profesores) => {
+            if (!profesores || profesores.length === 0) { // Verifica si la lista está vacía
+                return res.status(404).json({
+                    message: 'No se han encontrado profesores asignados a este aula',
+                });
+            }
+            return res.status(200).json(profesores);
+        })
+        .catch((error) => {
+            return res.status(500).json({
+                message: "Error en el servidor al recuperar los profesores asignados"
+            });
         });
 };

@@ -172,4 +172,28 @@ router.delete('/:id_aula', classroomController.eliminarAula);
  */
 router.post('/asignar-profesor', classroomController.asignarProfesor);
 
+/**
+ * @swagger
+ * /aulas/{id_aula}/profesores:
+ *   get:
+ *     summary: Obtiene los profesores asignados a un aula específica
+ *     description: Devuelve una lista de profesores asignados a un aula según el ID proporcionado.
+ *     tags: [Aulas]
+ *     parameters:
+ *       - in: path
+ *         name: id_aula
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del aula para la cual se quieren obtener los profesores asignados.
+ *     responses:
+ *       200:
+ *         description: Lista de profesores asignados al aula especificada.
+ *       404:
+ *         description: No se han encontrado profesores asignados a este aula.
+ *       500:
+ *         description: Error al recuperar los profesores asignados a las aulas.
+ */
+router.get('/:id_aula/profesores', classroomController.profesoresAsignados);
+
 module.exports = router;
