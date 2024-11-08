@@ -209,20 +209,41 @@ exports.asignarProfesor = (req, res) => {
 exports.profesoresAsignados = (req, res) => {
     const { id_aula } = req.params;
 
-    AulaProfesor.findAll({
-        where: { id_aula: id_aula }
+    Profesor.findAll({
+        include: {
+            model: Aula,
+            attributes: ['id_aula'],
+            through: { attributes: [] } // Excluye atributos adicionales de la tabla intermedia
+        }
     })
         .then((profesores) => {
-            if (!profesores || profesores.length === 0) { // Verifica si la lista está vacía
+            if (profesores.length === 0) {
                 return res.status(404).json({
-                    message: 'No se han encontrado profesores asignados a este aula',
+                    message: 'No se han encontrado profesores.'
                 });
             }
-            return res.status(200).json(profesores);
+
+            const { asignados, noAsignados } = profesores.reduce(
+                (acc, profesor) => {
+                    // Comprueba si el profesor está asociado al aula especificada
+                    const estaAsignado = profesor.Aulas.some((aula) => aula.id_aula == id_aula);
+                    if (estaAsignado) {
+                        acc.asignados.push(profesor);
+                    } else {
+                        acc.noAsignados.push(profesor);
+                    }
+                    return acc;
+                },
+                { asignados: [], noAsignados: [] } // Inicializa los arrays
+            );
+            return res.status(200).json({ asignados, noAsignados });
         })
         .catch((error) => {
+            console.error("Error al recuperar los profesores asignados:", error);
             return res.status(500).json({
                 message: "Error en el servidor al recuperar los profesores asignados"
             });
         });
 };
+
+
