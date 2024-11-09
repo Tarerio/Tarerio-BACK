@@ -208,7 +208,33 @@ router.post('/asignar-alumno', classroomController.asignarAlumno);
  *   post:
  *     summary: Desasignar un alumno de un aula
  *     description: Desasigna un alumno de un aula específica
-=======
+ *     tags: [Aulas]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_usuario:
+ *                 type: integer
+ *                 description: ID del alumno
+ *     responses:
+ *       200:
+ *         description: Alumno desasignado del aula exitosamente
+ *       404:
+ *         description: Aula o alumno no encontrado
+ *       500:
+ *         description: Error al desasignar alumno del aula
+ */
+router.post('/desasignar-alumno', classroomController.desasignarAlumno);
+
+/**
+ * @swagger
+ * /aulas/desasignar-alumno:
+ *   post:
+ *     summary: Desasignar un alumno de un aula
+ *     description: Desasigna un alumno de un aula específica
  * /aulas/{id_aula}/profesores:
  *   get:
  *     summary: Obtiene los profesores asignados a un aula específica
