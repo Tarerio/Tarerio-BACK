@@ -272,7 +272,7 @@ exports.eliminarProfesorAsignado = async (req, res) => {
         return res.status(500).json({
             status: 'error',
             message: 'Error al eliminar el aula',
-            error: error
+            error: error.message
         });
     }
 };
