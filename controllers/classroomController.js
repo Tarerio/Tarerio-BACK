@@ -246,4 +246,35 @@ exports.profesoresAsignados = (req, res) => {
         });
 };
 
+// DELETE
+// http://localhost:3000/aulas/eliminar-profesor
+exports.eliminarProfesorAsignado = async (req, res) => {
+    const { id_profesor, id_aula } = req.body;
+
+    try {
+        const deletedRow = await AulaProfesor.destroy({
+            where: { id_aula, id_usuario: id_profesor }
+        });
+
+        if (deletedRow === 0) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'No se encontró una asignación del profesor en el aula especificada'
+            });
+        }
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'Profesor desasignado correctamente del aula'
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            status: 'error',
+            message: 'Error al eliminar el aula',
+            error: error
+        });
+    }
+};
+
 
