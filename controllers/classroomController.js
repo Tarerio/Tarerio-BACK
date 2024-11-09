@@ -264,7 +264,7 @@ exports.desasignarAlumno = (req, res) => {
             res.status(500).json({ message: 'Error al quitar alumno', error });
         });
 }
-=======
+
 //GET
 //http://localhost:3000/aulas/:id_aula/profesores
 exports.profesoresAsignados = (req, res) => {
