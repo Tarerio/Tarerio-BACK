@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const Aula = require('../models/classroom');
 const Profesor = require('../models/teacher');
 const AulaProfesor = require('../models/relations/AulaProfesor');
+const Alumno = require('../models/student');
 
 //POST
 // http://localhost:3000/aulas/create
@@ -204,6 +205,66 @@ exports.asignarProfesor = (req, res) => {
         });
 };
 
+// http://localhost:3000/aulas/asignar-alumno
+exports.asignarAlumno = (req, res) => {
+    const { id_aula, id_usuario } = req.body;
+
+    Aula.findByPk(id_aula)
+        .then(aula => {
+            if (!aula) {
+                return res.status(404).json({ message: 'Aula no encontrada' });
+            }
+
+            Alumno.count({ 
+                where: { 
+                    id_aula 
+                } 
+            }).then(count => {
+                if (count >= aula.cupo) {
+                    return res.status(400).json({ message: 'El aula ya alcanzó su cupo máximo' });
+                }
+                Alumno.findByPk(id_usuario)
+                    .then(alumno => {
+                        if (!alumno) {
+                            return res.status(404).json({ message: 'Alumno no encontrado' });
+                        }
+                        if (alumno.id_aula) {
+                            return res.status(400).json({ message: 'El alumno ya pertenece a un aula' });
+                        }
+                        alumno.update({ id_aula })
+                            .then(() => {
+                                return res.status(200).json({ message: 'Alumno asignado al aula exitosamente' });
+                            });
+                    });
+            });
+        })
+        .catch(error => {
+            console.error('Error al añadir alumno a un aula:', error);
+            res.status(500).json({ message: 'Error al añadir alumno', error });
+        });
+};
+
+exports.desasignarAlumno = (req, res) => {
+    const { id_usuario } = req.body;
+    Alumno.findByPk(id_usuario)
+        .then(alumno => {
+            if (!alumno) {
+                return res.status(404).json({ message: 'Alumno no encontrado' });
+            }
+            if (!alumno.id_aula) {
+                return res.status(400).json({ message: 'El alumno no pertenece a un aula' });
+            }
+            alumno.update({ id_aula: null })
+                .then(() => {
+                    return res.status(200).json({ message: 'Alumno quitado del aula exitosamente' });
+                });
+        })
+        .catch(error => {
+            console.error('Error al quitar alumno de un aula:', error);
+            res.status(500).json({ message: 'Error al quitar alumno', error });
+        });
+}
+=======
 //GET
 //http://localhost:3000/aulas/:id_aula/profesores
 exports.profesoresAsignados = (req, res) => {
@@ -276,5 +337,3 @@ exports.eliminarProfesorAsignado = async (req, res) => {
         });
     }
 };
-
-

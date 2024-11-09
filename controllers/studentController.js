@@ -28,7 +28,20 @@ exports.inicioSesionAlumno = (req, res) => {
 //GET
 // http://localhost:3000/alumnos
 exports.listarAlumnos = (req, res) => {
-    Alumno.findAll().then(users => {
+
+    const { aula } = req.query;
+
+    let whereClause = {};
+
+    if (aula) {
+        if (aula === '-1') {
+            whereClause.id_aula = null;
+        } else {
+            whereClause.id_aula = aula;
+        }
+    }
+
+    Alumno.findAll({ where: whereClause }).then(users => {
         res.status(200).json({
             status: 'success',
             message: 'Alumnos obtenidos correctamente',
