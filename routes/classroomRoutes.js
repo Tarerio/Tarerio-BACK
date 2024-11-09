@@ -208,6 +208,35 @@ router.post('/asignar-alumno', classroomController.asignarAlumno);
  *   post:
  *     summary: Desasignar un alumno de un aula
  *     description: Desasigna un alumno de un aula específica
+=======
+ * /aulas/{id_aula}/profesores:
+ *   get:
+ *     summary: Obtiene los profesores asignados a un aula específica
+ *     description: Devuelve una lista de profesores asignados a un aula según el ID proporcionado.
+ *     tags: [Aulas]
+ *     parameters:
+ *       - in: path
+ *         name: id_aula
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del aula para la cual se quieren obtener los profesores asignados.
+ *     responses:
+ *       200:
+ *         description: Lista de profesores asignados al aula especificada.
+ *       404:
+ *         description: No se han encontrado profesores asignados a este aula.
+ *       500:
+ *         description: Error al recuperar los profesores asignados a las aulas.
+ */
+router.get('/:id_aula/profesores', classroomController.profesoresAsignados);
+
+/**
+ * @swagger
+ * /aulas/eliminar-profesor:
+ *   post:
+ *     summary: Eliminar la asignación de un profesor a un aula
+ *     description: Elimina la fila que representa la asignación de un profesor específico a un aula en la base de datos.
  *     tags: [Aulas]
  *     requestBody:
  *       required: true
@@ -216,17 +245,58 @@ router.post('/asignar-alumno', classroomController.asignarAlumno);
  *           schema:
  *             type: object
  *             properties:
- *               id_usuario:
+ *               id_profesor:
  *                 type: integer
- *                 description: ID del alumno
+ *                 description: ID del profesor a desasignar del aula.
+ *                 example: 1
+ *               id_aula:
+ *                 type: integer
+ *                 description: ID del aula de la que se eliminará al profesor.
+ *                 example: 15
  *     responses:
  *       200:
- *         description: Alumno desasignado del aula exitosamente
+ *         description: Profesor desasignado correctamente del aula
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 message:
+ *                   type: string
+ *                   example: Profesor desasignado correctamente del aula
  *       404:
- *         description: Aula o alumno no encontrado
+ *         description: No se encontró una asignación del profesor en el aula especificada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: No se encontró una asignación del profesor en el aula especificada
  *       500:
- *         description: Error al desasignar alumno del aula
+ *         description: Error al intentar desasignar el profesor del aula
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Error al intentar desasignar el profesor del aula
+ *                 error:
+ *                   type: string
+ *                   example: Error interno del servidor
  */
-router.post('/desasignar-alumno', classroomController.desasignarAlumno);
+router.post('/eliminar-profesor', classroomController.eliminarProfesorAsignado);
 
 module.exports = router;

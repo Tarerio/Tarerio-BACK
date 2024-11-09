@@ -29,7 +29,7 @@ exports.crearAula = async (req, res) => {
     Aula.create({
         clave_aula: clave,
         cupo: capacidad,
-        imagenBase64: image, 
+        imagenBase64: image,
     }).then(classroom => {
         res.status(201).json({
             status: 'success',
@@ -205,7 +205,6 @@ exports.asignarProfesor = (req, res) => {
         });
 };
 
-//POST
 // http://localhost:3000/aulas/asignar-alumno
 exports.asignarAlumno = (req, res) => {
     const { id_aula, id_usuario } = req.body;
@@ -265,3 +264,76 @@ exports.desasignarAlumno = (req, res) => {
             res.status(500).json({ message: 'Error al quitar alumno', error });
         });
 }
+=======
+//GET
+//http://localhost:3000/aulas/:id_aula/profesores
+exports.profesoresAsignados = (req, res) => {
+    const { id_aula } = req.params;
+
+    Profesor.findAll({
+        include: {
+            model: Aula,
+            attributes: ['id_aula'],
+            through: { attributes: [] } // Excluye atributos adicionales de la tabla intermedia
+        }
+    })
+        .then((profesores) => {
+            if (profesores.length === 0) {
+                return res.status(404).json({
+                    message: 'No se han encontrado profesores.'
+                });
+            }
+
+            const { asignados, noAsignados } = profesores.reduce(
+                (acc, profesor) => {
+                    // Comprueba si el profesor está asociado al aula especificada
+                    const estaAsignado = profesor.Aulas.some((aula) => aula.id_aula == id_aula);
+                    if (estaAsignado) {
+                        acc.asignados.push(profesor);
+                    } else {
+                        acc.noAsignados.push(profesor);
+                    }
+                    return acc;
+                },
+                { asignados: [], noAsignados: [] } // Inicializa los arrays
+            );
+            return res.status(200).json({ asignados, noAsignados });
+        })
+        .catch((error) => {
+            console.error("Error al recuperar los profesores asignados:", error);
+            return res.status(500).json({
+                message: "Error en el servidor al recuperar los profesores asignados"
+            });
+        });
+};
+
+// DELETE
+// http://localhost:3000/aulas/eliminar-profesor
+exports.eliminarProfesorAsignado = async (req, res) => {
+    const { id_profesor, id_aula } = req.body;
+
+    try {
+        const deletedRow = await AulaProfesor.destroy({
+            where: { id_aula, id_usuario: id_profesor }
+        });
+
+        if (deletedRow === 0) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'No se encontró una asignación del profesor en el aula especificada'
+            });
+        }
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'Profesor desasignado correctamente del aula'
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            status: 'error',
+            message: 'Error al eliminar el aula',
+            error: error.message
+        });
+    }
+};
