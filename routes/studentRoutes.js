@@ -35,7 +35,7 @@ router.post('/inicioSesionAlumno', studentController.inicioSesionAlumno);
 
 /**
  * @swagger
- * /alumnos/create:
+ * /alumnos/crear:
  *   post:
  *     summary: Crear un nuevo alumno
  *     description: Registra un nuevo alumno en el sistema.
@@ -85,6 +85,13 @@ router.post('/crear', studentController.registrarAlumno);
  *     summary: Listar todos los alumnos
  *     description: Obtiene una lista de todos los alumnos registrados.
  *     tags: [Alumnos]
+ *     parameters:
+ *       - in: query
+ *         name: aula
+ *         schema:
+ *           type: integer
+ *         description: ID del aula para filtrar los alumnos. Use -1 para alumnos sin aula.
+ *         required: false
  *     responses:
  *       200:
  *         description: Alumnos obtenidos correctamente

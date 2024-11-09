@@ -172,4 +172,61 @@ router.delete('/:id_aula', classroomController.eliminarAula);
  */
 router.post('/asignar-profesor', classroomController.asignarProfesor);
 
+/**
+ * @swagger
+ * /aulas/asignar-alumno:
+ *   post:
+ *     summary: Asignar un alumno a una aula
+ *     description: Asigna un alumno a un aula específica
+ *     tags: [Aulas]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_aula:
+ *                 type: integer
+ *                 description: ID del aula
+ *               id_usuario:
+ *                 type: integer
+ *                 description: ID del alumno
+ *     responses:
+ *       200:
+ *         description: Alumno asignado al aula exitosamente
+ *       404:
+ *         description: Aula o alumno no encontrado
+ *       500:
+ *         description: Error al asignar alumno al aula
+ */
+router.post('/asignar-alumno', classroomController.asignarAlumno);
+
+/**
+ * @swagger
+ * /aulas/desasignar-alumno:
+ *   post:
+ *     summary: Desasignar un alumno de un aula
+ *     description: Desasigna un alumno de un aula específica
+ *     tags: [Aulas]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_usuario:
+ *                 type: integer
+ *                 description: ID del alumno
+ *     responses:
+ *       200:
+ *         description: Alumno desasignado del aula exitosamente
+ *       404:
+ *         description: Aula o alumno no encontrado
+ *       500:
+ *         description: Error al desasignar alumno del aula
+ */
+router.post('/desasignar-alumno', classroomController.desasignarAlumno);
+
 module.exports = router;
