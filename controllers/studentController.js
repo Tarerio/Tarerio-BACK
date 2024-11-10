@@ -117,7 +117,7 @@ exports.obtenerAlumnoByNickname = async (req, res) => {
 //POST
 // http://localhost:3000/alumnos/create
 exports.registrarAlumno = (req, res) => {
-    const { nickname, patron, perfil,image } = req.body;
+    const { nickname, patron, perfil, image } = req.body;
     const regex = /^([DSFI])([0-3])\1[0-3]\1[0-3]\1[0-3]$/;
 
     if (!nickname || !patron || !perfil) {
@@ -138,8 +138,10 @@ exports.registrarAlumno = (req, res) => {
     const imagenes = perfil.imagenes || false;
     const pictograma = perfil.pictograma|| false;
     const video = perfil.video || false;
+    const audio = perfil.audio || false;
+    const porDefecto = perfil.porDefecto || "texto";
 
-    if(!texto && !imagenes && !pictograma && !video){
+    if(!texto && !imagenes && !pictograma && !video && !audio){
         return res.status(400).json({ 
             status: 'error',
             codigo_error: 3, //Codigo de error de falta de perfil
@@ -154,6 +156,8 @@ exports.registrarAlumno = (req, res) => {
         imagenes: imagenes,
         pictograma: pictograma,
         video: video,
+        audio: audio,
+        porDefecto: porDefecto,
         imagenBase64 : image
     }).then(student => {
         res.status(201).json({
@@ -180,8 +184,10 @@ exports.actualizarAlumno = (req, res) => {
     const imagenes = perfil.imagenes || false;
     const pictograma = perfil.pictograma|| false;
     const video = perfil.video || false;
+    const audio = perfil.audio || false;
+    const porDefecto = perfil.porDefecto || "texto";
 
-    if(!texto && !imagenes && !pictograma && !video){
+    if(!texto && !imagenes && !pictograma && !video && !audio){
         return res.status(400).json({ 
             status: 'error',
             message: 'El alumno debe tener al menos un tipo de perfil' 
@@ -205,6 +211,8 @@ exports.actualizarAlumno = (req, res) => {
             imagenes: imagenes,
             pictograma: pictograma,
             video: video,
+            audio: audio,
+            porDefecto: porDefecto,
             imagenBase64 : image
         });
     }).then(updatedStudent => {

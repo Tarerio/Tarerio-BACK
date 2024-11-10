@@ -37,6 +37,17 @@ const Alumno = sequelize.define('Alumno', {
     allowNull: true,
     unique: false
   },
+  audio:{
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    unique: false
+  },
+  porDefecto:{
+    type: DataTypes.ENUM('audio', 'video', 'pictograma', 'texto', 'imagenes'),
+    allowNull: true,
+    unique: false,
+    defaultValue: 'texto'
+  },
   imagenBase64: {
     type: DataTypes.TEXT,
     allowNull: true,
