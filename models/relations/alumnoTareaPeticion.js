@@ -1,9 +1,9 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/database");
 const Alumno = require('../student');
-const TareaJuego = require('../tareaJuego');
+const { TareaPeticion } = require('../tareaPeticion');
 
-const AlumnoTareaJuego = sequelize.define("AlumnoTareaJuego", {
+const AlumnoTareaPeticion = sequelize.define("AlumnoTareaPeticion", {
   completado: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
@@ -13,13 +13,13 @@ const AlumnoTareaJuego = sequelize.define("AlumnoTareaJuego", {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false,
-  },
+  }
 }, {
   freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
 });
 
 // Relación muchos a muchos con el modelo intermedio "se asigna"
-Alumno.belongsToMany(TareaJuego, { through: AlumnoTareaJuego, foreignKey: 'id_usuario' });
-TareaJuego.belongsToMany(Alumno, { through: AlumnoTareaJuego, foreignKey: 'ID_tarea' });
+Alumno.belongsToMany(TareaPeticion, { through: AlumnoTareaPeticion, foreignKey: 'id_usuario' });
+TareaPeticion.belongsToMany(Alumno, { through: AlumnoTareaPeticion, foreignKey: 'ID_tarea' });
 
-module.exports = AlumnoTareaJuego;
+module.exports = AlumnoTareaPeticion;
