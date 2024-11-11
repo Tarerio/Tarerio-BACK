@@ -59,9 +59,6 @@ router.get('', tareaJuegoController.getAllTareasJuego);
  *                 type: string
  *               Descripcion:
  *                 type: string
- *               Fecha_estimada_cierre:
- *                 type: string
- *                 format: date
  *               Enlace:
  *                 type: string
  *                 description: URL del recurso asociado a la tarea

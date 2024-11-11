@@ -27,7 +27,7 @@ const TareaPorPasos = sequelize.define("TareaPorPasos", {
   },
   Fecha_estimada_cierre: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   },
 });
 

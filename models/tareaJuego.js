@@ -24,7 +24,7 @@ const TareaJuego = sequelize.define("TareaJuego", {
   },
   Fecha_estimada_cierre: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   },
   Enlace: {
     type: DataTypes.STRING,

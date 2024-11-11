@@ -26,6 +26,10 @@ const TareaPeticion = sequelize.define("TareaPeticion", {
     allowNull: false,
     defaultValue: DataTypes.NOW,
   },
+  Fecha_estimada_cierre: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 }, {
   freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
 });
