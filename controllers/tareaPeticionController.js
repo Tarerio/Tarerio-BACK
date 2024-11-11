@@ -1,5 +1,7 @@
 const { TareaPeticion, Enunciado, Respuesta } = require("../models/tareaPeticion");
+const Alumno = require("../models/student");
 const sequelize = require('../config/database');
+const AlumnoTareaPeticion = require("../models/relations/alumnoTareaPeticion");
 
 //GET 
 // Una tarea por su ID
@@ -142,5 +144,72 @@ exports.updateTareaPeticion = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Error al actualizar la tarea" });
+    }
+};
+
+
+//PATCH
+// Actualizar solo la fecha estimada de cierre de una tarea
+// http://localhost:3000/tareaPeticion/:id
+exports.updateFechaCierreTarea = async (req, res) => {
+    const { id } = req.params;
+    const { Fecha_estimada_cierre } = req.body;
+
+    try {
+        // Buscar la tarea por su ID
+        const tareaPeticion = await TareaPeticion.findByPk(id);
+
+        // Verificar si la tarea existe
+        if (!tareaPeticion) {
+            return res.status(404).json({ message: "Tarea no encontrada" });
+        }
+
+        // Actualizar solo la fecha estimada de cierre
+        await tareaPeticion.update({ Fecha_estimada_cierre });
+
+        res.status(200).json({
+            message: "Fecha estimada de cierre actualizada con éxito",
+            tarea: tareaPeticion
+        });
+    } catch (err) {
+        console.error("Error al actualizar la fecha estimada de cierre:", err);
+        res.status(500).json({ message: "Error al actualizar la fecha estimada de cierre", error: err.message });
+    }
+};
+
+//POST
+// Asignar tarea a alumno
+//http://localhost:3000/tareaPeticion/:id/asignar
+exports.asignarTareaAlumno = async (req, res) => {
+    const { id } = req.params;
+    const { id_usuario } = req.body;
+
+    try {
+        // Verificar si el alumno y la tarea existen
+        const alumnoEncontrado = await Alumno.findByPk(id_usuario);
+        const tareaEncontrada = await TareaPeticion.findByPk(id);
+
+        if (!alumnoEncontrado) {
+            return res.status(404).json({ message: "Alumno no encontrado" });
+        }
+
+        if (!tareaEncontrada) {
+            return res.status(404).json({ message: "Tarea no encontrada" });
+        }
+        
+        let asignacion = await AlumnoTareaPeticion.create({
+            id_usuario: id_usuario,
+            ID_tarea: id,
+            completado: false,
+            revisado: false
+        });
+
+        console.log(asignacion);
+
+        return res.status(201).json({ message: "Tarea asignada con éxito", asignacion });
+
+    } catch (error) {
+        console.error("Error al asignar tarea a alumno:", error);
+        return res.status(500).json({ message: "Error al asignar tarea a alumno", error: error.message });
     }
 };

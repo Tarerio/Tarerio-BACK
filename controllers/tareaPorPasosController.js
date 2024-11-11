@@ -1,5 +1,7 @@
 const { TareaPorPasos, Subtarea } = require("../models/tareaPorPasos");
 const sequelize = require('../config/database');
+const Alumno = require('../models/student');
+const AlumnoTareaPorPasos = require('../models/relations/alumnoTareaPorPasos');
 
 //GET 
 // Una tarea por su ID
@@ -165,25 +167,69 @@ exports.updateTareaPorPasos = async (req, res) => {
     }
 };
 
-/*
-// DELETE
-// Eliminar una tarea por pasos
+//PATCH
+// Actualizar solo la fecha estimada de cierre de una tarea
 // http://localhost:3000/tareaPorPasos/:id
-exports.deleteTareaPorPasos = async (req, res) => {
+exports.updateFechaCierreTarea = async (req, res) => {
     const { id } = req.params;
+    const { Fecha_estimada_cierre } = req.body;
 
     try {
+        // Buscar la tarea por su ID
         const tareaPorPasos = await TareaPorPasos.findByPk(id);
 
+        // Verificar si la tarea existe
         if (!tareaPorPasos) {
             return res.status(404).json({ message: "Tarea no encontrada" });
         }
 
-        await tareaPorPasos.destroy();
-        res.status(200).json({ message: "Tarea eliminada correctamente" });
+        // Actualizar solo la fecha estimada de cierre
+        await tareaPorPasos.update({ Fecha_estimada_cierre });
+
+        res.status(200).json({
+            message: "Fecha estimada de cierre actualizada con éxito",
+            tarea: tareaPorPasos
+        });
     } catch (err) {
-        console.error("Error al eliminar la tarea:", err);
-        res.status(500).json({ message: "Error al eliminar la tarea" });
+        console.error("Error al actualizar la fecha estimada de cierre:", err);
+        res.status(500).json({ message: "Error al actualizar la fecha estimada de cierre", error: err.message });
     }
 };
-*/
+
+
+//POST
+// Asignar tarea a alumno
+//http://localhost:3000/tareaPorPasos/:id/asignar
+exports.asignarTareaAlumno = async (req, res) => {
+    const { id } = req.params;
+    const { id_usuario } = req.body;
+
+    try {
+        // Verificar si el alumno y la tarea existen
+        const alumnoEncontrado = await Alumno.findByPk(id_usuario);
+        const tareaEncontrada = await TareaPorPasos.findByPk(id);
+
+        if (!alumnoEncontrado) {
+            return res.status(404).json({ message: "Alumno no encontrado" });
+        }
+
+        if (!tareaEncontrada) {
+            return res.status(404).json({ message: "Tarea no encontrada" });
+        }
+        
+        let asignacion = await AlumnoTareaPorPasos.create({
+            id_usuario: id_usuario,
+            ID_tarea: id,
+            completado: false,
+            revisado: false
+        });
+
+        console.log(asignacion);
+
+        return res.status(201).json({ message: "Tarea asignada con éxito", asignacion });
+
+    } catch (error) {
+        console.error("Error al asignar tarea a alumno:", error);
+        return res.status(500).json({ message: "Error al asignar tarea a alumno", error: error.message });
+    }
+};
