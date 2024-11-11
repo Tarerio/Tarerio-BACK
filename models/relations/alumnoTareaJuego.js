@@ -14,12 +14,10 @@ const AlumnoTareaJuego = sequelize.define("AlumnoTareaJuego", {
     allowNull: false,
     defaultValue: false,
   },
-}, {
-  freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
 });
 
 // Relación muchos a muchos con el modelo intermedio "se asigna"
-Alumno.belongsToMany(TareaJuego, { through: AlumnoTareaJuego, foreignKey: 'id_usuario' });
-TareaJuego.belongsToMany(Alumno, { through: AlumnoTareaJuego, foreignKey: 'ID_tarea' });
+Alumno.belongsToMany(TareaJuego, { through: AlumnoTareaJuego });
+TareaJuego.belongsToMany(Alumno, { through: AlumnoTareaJuego });
 
 module.exports = AlumnoTareaJuego;
