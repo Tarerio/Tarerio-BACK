@@ -24,12 +24,14 @@ const TareaJuego = sequelize.define("TareaJuego", {
   },
   Fecha_estimada_cierre: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   },
   Enlace: {
     type: DataTypes.STRING,
     allowNull: false,
   },
+}, {
+  freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
 });
 
 TareaJuego.belongsTo(Administrador, { foreignKey: {name: 'creatorId',}});

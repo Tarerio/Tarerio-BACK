@@ -28,8 +28,10 @@ const TareaPeticion = sequelize.define("TareaPeticion", {
   },
   Fecha_estimada_cierre: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   },
+}, {
+  freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
 });
 
 // ===================================================================
@@ -79,7 +81,7 @@ const Respuesta = sequelize.define("Respuesta", {
 // ===================================================================
 
 // Administrador - TareaPeticion
-//TareaPeticion.belongsTo(Administrador, { foreignKey: { name: 'creatorId', } });
+TareaPeticion.belongsTo(Administrador, { foreignKey: { name: 'creatorId', } });
 
 // TareaPeticion - Enunciado
 TareaPeticion.hasMany(Enunciado, {
@@ -87,20 +89,20 @@ TareaPeticion.hasMany(Enunciado, {
   onDelete: "CASCADE", // Se eliminan los enunciados si se elimina la tarea
 });
 
-Enunciado.belongsTo(TareaPeticion, { 
-  foreignKey:  { name: "ID_tarea", as: "tareaPeticion", allowNull: false },
+Enunciado.belongsTo(TareaPeticion, {
+  foreignKey: { name: "ID_tarea", as: "tareaPeticion", allowNull: false },
 });
 
 // Enunciado - Respuesta
 Enunciado.hasOne(Respuesta, {
   foreignKey: { name: 'ID_enunciado', allowNull: false },
-  as: "Respuesta", 
+  as: "Respuesta",
   onDelete: 'CASCADE', // Se elimina la respuesta si se elimina el enunciado
 });
 
 Respuesta.belongsTo(Enunciado, {
   foreignKey: { name: 'ID_enunciado', allowNull: false },
-   as: "Enunciado",
+  as: "Enunciado",
 });
 
 // Alumno - Respuesta
@@ -113,4 +115,4 @@ Respuesta.belongsTo(Alumno, {
 });
 
 // Exportar los modelos
-module.exports = { TareaPeticion , Enunciado, Respuesta };
+module.exports = { TareaPeticion, Enunciado, Respuesta };

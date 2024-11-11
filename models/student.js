@@ -17,32 +17,32 @@ const Alumno = sequelize.define('Alumno', {
     allowNull: false,
     unique: true
   },
-  texto:{
+  texto: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
     unique: false
   },
-  imagenes:{
+  imagenes: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
     unique: false
   },
-  pictograma:{
+  pictograma: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
     unique: false
   },
-  video:{
+  video: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
     unique: false
   },
-  audio:{
+  audio: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
     unique: false
   },
-  porDefecto:{
+  porDefecto: {
     type: DataTypes.ENUM('audio', 'video', 'pictograma', 'texto', 'imagenes'),
     allowNull: true,
     unique: false,

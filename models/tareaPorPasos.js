@@ -27,7 +27,7 @@ const TareaPorPasos = sequelize.define("TareaPorPasos", {
   },
   Fecha_estimada_cierre: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   },
 });
 
@@ -63,7 +63,7 @@ const Subtarea = sequelize.define("Subtarea", {
 // ===================================================================
 
 // Relacion entre TareaPorPasos y Subtarea
-//TareaPorPasos.belongsTo(Administrador, { foreignKey: {name: 'creatorId',}});
+TareaPorPasos.belongsTo(Administrador, { foreignKey: {name: 'creatorId',}});
 
 TareaPorPasos.hasMany(Subtarea, {
   foreignKey: { name: "ID_tarea", allowNull: false },
