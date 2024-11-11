@@ -8,7 +8,6 @@ const tareaJuegoRoutes = require('./routes/tareaJuegoRoutes');
 const tareaPorPasosRoutes = require('./routes/tareaPorPasosRoutes');
 const tareaPeticionRoutes = require('./routes/tareaPeticionRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const menuAccesibleRoutes = require('./routes/menuAccesibleRoutes');
 const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./swaggerConfig');
@@ -29,7 +28,6 @@ app.use('/tareaPorPasos', tareaPorPasosRoutes);
 app.use('/tareaPeticion', tareaPeticionRoutes);
 app.use('/administradores', adminRoutes);
 app.use('/aulas', classroomRoutes);
-app.use('/menuAccesible', menuAccesibleRoutes);
 
 const port = process.env.PORT || 3000;
 

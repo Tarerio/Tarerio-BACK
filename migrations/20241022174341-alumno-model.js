@@ -46,17 +46,6 @@ module.exports = {
         allowNull: true,
         unique: false
       },
-      audio:{
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
-        unique: false
-      },
-      porDefecto:{
-        type: Sequelize.ENUM('audio', 'video', 'pictograma', 'texto', 'imagenes'),
-        allowNull: true,
-        unique: false,
-        defaultValue: 'texto'
-      },
       createdAt: {
         allowNull: true,
         type: Sequelize.DATE,
