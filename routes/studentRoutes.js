@@ -35,10 +35,9 @@ router.post('/inicioSesionAlumno', studentController.inicioSesionAlumno);
 
 /**
  * @swagger
- * /alumnos/crear:
+ * /alumnos/create:
  *   post:
- *     summary: Crear un nuevo alumno
- *     description: Registra un nuevo alumno en el sistema.
+ *     summary: Registrar un nuevo alumno
  *     tags: [Alumnos]
  *     requestBody:
  *       required: true
@@ -49,13 +48,12 @@ router.post('/inicioSesionAlumno', studentController.inicioSesionAlumno);
  *             properties:
  *               nickname:
  *                 type: string
- *                 description: Nickname del alumno
+ *                 description: El nickname del alumno
  *               patron:
  *                 type: string
- *                 description: Contraseña del alumno
+ *                 description: La contraseña del alumno
  *               perfil:
  *                 type: object
- *                 description: Configuración de perfil del alumno
  *                 properties:
  *                   texto:
  *                     type: boolean
@@ -65,18 +63,102 @@ router.post('/inicioSesionAlumno', studentController.inicioSesionAlumno);
  *                     type: boolean
  *                   video:
  *                     type: boolean
+ *                   audio:
+ *                     type: boolean
+ *                   porDefecto:
+ *                     type: string
+ *                     enum: [audio, video, pictograma, texto, imagenes]
  *               image:
  *                 type: string
- *                 description: Imagen del alumno en formato base64
+ *                 description: La imagen en formato base64
  *     responses:
  *       201:
  *         description: Alumno creado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ *                 alumno:
+ *                   type: object
  *       400:
- *         description: Datos faltantes o patrón no válido
+ *         description: Error en la solicitud
  *       500:
  *         description: Error al crear el alumno
  */
-router.post('/crear', studentController.registrarAlumno);
+router.post('/create', studentController.registrarAlumno);
+
+/**
+ * @swagger
+ * /alumnos/{id_usuario}:
+ *   put:
+ *     summary: Actualizar un alumno existente
+ *     tags: [Alumnos]
+ *     parameters:
+ *       - in: path
+ *         name: id_usuario
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID del alumno
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nickname:
+ *                 type: string
+ *                 description: El nickname del alumno
+ *               patron:
+ *                 type: string
+ *                 description: La contraseña del alumno
+ *               perfil:
+ *                 type: object
+ *                 properties:
+ *                   texto:
+ *                     type: boolean
+ *                   imagenes:
+ *                     type: boolean
+ *                   pictograma:
+ *                     type: boolean
+ *                   video:
+ *                     type: boolean
+ *                   audio:
+ *                     type: boolean
+ *                   porDefecto:
+ *                     type: string
+ *                     enum: [audio, video, pictograma, texto, imagenes]
+ *               image:
+ *                 type: string
+ *                 description: La imagen en formato base64
+ *     responses:
+ *       201:
+ *         description: Alumno actualizado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ *                 alumno:
+ *                   type: object
+ *       400:
+ *         description: Error en la solicitud
+ *       404:
+ *         description: Alumno no encontrado
+ *       500:
+ *         description: Error al actualizar el alumno
+ */
+router.put('/:id_usuario', studentController.actualizarAlumno);
 
 /**
  * @swagger
@@ -147,56 +229,6 @@ router.get('/:id_usuario', studentController.obtenerAlumno);
  *         description: Error al obtener el alumno
  */
 router.get('/nickname/:nickname', studentController.obtenerAlumnoByNickname);
-
-/**
- * @swagger
- * /alumnos/{id_usuario}:
- *   put:
- *     summary: Actualizar información de un alumno
- *     description: Permite actualizar los datos de un alumno, incluyendo nickname, contraseña y configuración de perfil.
- *     tags: [Alumnos]
- *     parameters:
- *       - in: path
- *         name: id_usuario
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID del alumno
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               nickname:
- *                 type: string
- *               patron:
- *                 type: string
- *               perfil:
- *                 type: object
- *                 properties:
- *                   texto:
- *                     type: boolean
- *                   imagenes:
- *                     type: boolean
- *                   pictograma:
- *                     type: boolean
- *                   video:
- *                     type: boolean
- *               image:
- *                 type: string
- *     responses:
- *       201:
- *         description: Alumno actualizado correctamente
- *       400:
- *         description: Perfil incompleto o inválido
- *       404:
- *         description: Alumno no encontrado
- *       500:
- *         description: Error al actualizar el alumno
- */
-router.put('/:id_usuario', studentController.actualizarAlumno);
 
 /**
  * @swagger
