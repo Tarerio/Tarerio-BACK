@@ -53,8 +53,6 @@ const Alumno = sequelize.define('Alumno', {
     allowNull: true,
     unique: false
   }
-}, {
-  freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
 });
 
 module.exports = Alumno;
