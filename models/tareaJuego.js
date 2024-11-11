@@ -30,6 +30,8 @@ const TareaJuego = sequelize.define("TareaJuego", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+}, {
+  freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
 });
 
 TareaJuego.belongsTo(Administrador, { foreignKey: {name: 'creatorId',}});
