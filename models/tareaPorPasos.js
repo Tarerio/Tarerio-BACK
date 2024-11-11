@@ -63,7 +63,7 @@ const Subtarea = sequelize.define("Subtarea", {
 // ===================================================================
 
 // Relacion entre TareaPorPasos y Subtarea
-TareaPorPasos.belongsTo(Administrador, { foreignKey: {name: 'creatorId',}});
+//TareaPorPasos.belongsTo(Administrador, { foreignKey: {name: 'creatorId',}});
 
 TareaPorPasos.hasMany(Subtarea, {
   foreignKey: { name: "ID_tarea", allowNull: false },
