@@ -308,7 +308,7 @@ exports.profesoresAsignados = (req, res) => {
 };
 
 // DELETE
-// http://localhost:3000/aulas/eliminar-profesor
+// http://localhost:3000/aulas/desasignar-profesor
 exports.eliminarProfesorAsignado = async (req, res) => {
     const { id_profesor, id_aula } = req.body;
 
