@@ -176,6 +176,9 @@ router.patch("/:id", tareaJuegoController.updateFechaCierreTarea);
  *             properties:
  *               id_usuario:
  *                 type: integer
+ *               Fecha_fin_asignacion:
+ *                 type: string
+ *                 format: date
  *     responses:
  *       200:
  *         description: Tarea juego asignada exitosamente

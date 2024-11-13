@@ -202,7 +202,9 @@ exports.updateFechaCierreTarea = async (req, res) => {
 //http://localhost:3000/tareaPorPasos/:id/asignar
 exports.asignarTareaAlumno = async (req, res) => {
     const { id } = req.params;
-    const { id_usuario } = req.body;
+    const { id_usuario , Fecha_fin_asignacion} = req.body;
+
+    console.log("fecha", Fecha_fin_asignacion);
 
     try {
         // Verificar si el alumno y la tarea existen
@@ -221,7 +223,8 @@ exports.asignarTareaAlumno = async (req, res) => {
             id_usuario: id_usuario,
             ID_tarea: id,
             completado: false,
-            revisado: false
+            revisado: false,
+            Fecha_fin_asignacion: Fecha_fin_asignacion,
         });
 
         console.log(asignacion);
