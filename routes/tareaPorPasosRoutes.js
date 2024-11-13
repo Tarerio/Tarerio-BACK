@@ -200,6 +200,9 @@ router.patch("/:id", tareaPorPasosController.updateFechaCierreTarea);
  *             properties:
  *               id_usuario:
  *                 type: integer
+ *               Fecha_fin_asignacion:
+ *                 type: string
+ *                 format: date
  *     responses:
  *       200:
  *         description: Tarea por pasos asignada exitosamente
