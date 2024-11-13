@@ -204,8 +204,6 @@ exports.asignarTareaAlumno = async (req, res) => {
     const { id } = req.params;
     const { id_usuario , Fecha_fin_asignacion} = req.body;
 
-    console.log("fecha", Fecha_fin_asignacion);
-
     try {
         // Verificar si el alumno y la tarea existen
         const alumnoEncontrado = await Alumno.findByPk(id_usuario);
@@ -222,12 +220,10 @@ exports.asignarTareaAlumno = async (req, res) => {
         let asignacion = await AlumnoTareaPorPasos.create({
             id_usuario: id_usuario,
             ID_tarea: id,
+            Fecha_fin_asignacion: Fecha_fin_asignacion,
             completado: false,
             revisado: false,
-            Fecha_fin_asignacion: Fecha_fin_asignacion,
         });
-
-        console.log(asignacion);
 
         return res.status(201).json({ message: "Tarea asignada con éxito", asignacion });
 

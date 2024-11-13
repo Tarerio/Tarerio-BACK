@@ -206,8 +206,6 @@ exports.asignarTareaAlumno = async (req, res) => {
             revisado: false
         });
 
-        console.log(asignacion);
-
         return res.status(201).json({ message: "Tarea asignada con éxito", asignacion });
 
     } catch (error) {
