@@ -1,4 +1,5 @@
 const Alumno = require('../models/student');
+const { Sequelize } = require('sequelize');
 
 // POST iniciar sesión pasando en el cuerpo de la solicitud nickname y patron
 // http://localhost:3000/alumnos/inicioSesionAlumno
@@ -56,10 +57,50 @@ exports.listarAlumnos = (req, res) => {
     });
 }
 
+
+//GET
+// http://localhost:3000/alumnos/filtered?categoria=texto&nickname=algo
+exports.filteredObtenerAlumnos = async (req, res) => {
+    // Obtén los parámetros de la query
+    const { categoria, nickname } = req.query;
+
+    console.log("ESTOY FILTRANDO");
+
+    // Crea un objeto de condiciones para la búsqueda
+    let whereClause = {};
+
+    // Filtra por categoría si se proporciona
+    if (categoria && ['texto', 'imagenes', 'pictograma', 'video', 'audio'].includes(categoria)) {
+        whereClause[categoria] = true;
+    }
+
+    // Filtra por nickname si se proporciona
+    if (nickname) {
+        whereClause.nickname = {
+            [Sequelize.Op.iLike]: `%${nickname}%` // Utiliza LIKE para buscar coincidencias parciales (case-insensitive)
+        };
+    }
+
+    // Busca los alumnos según las condiciones construidas
+    Alumno.findAll({
+        where: whereClause
+    })
+    .then(alumnos => {
+        res.json(alumnos);
+    })
+    .catch(error => {
+        console.error('Error al filtrar alumnos:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    });
+};
+
+
 //GET
 // http://localhost:3000/alumnos/:id_usuario
 exports.obtenerAlumno = async (req, res) => {
     const { id_usuario } = req.params;
+
+    console.log("ESTOY OBTENIENDO POR ID");
 
     Alumno.findOne({
         where: { id_usuario }
@@ -69,7 +110,7 @@ exports.obtenerAlumno = async (req, res) => {
                 status: 'error',
                 message: 'No se ha encontrado el alumno'
             });
-        }else{
+        } else {
             res.status(200).json({
                 status: 'success',
                 message: 'Alumno obtenido correctamente',
@@ -98,7 +139,7 @@ exports.obtenerAlumnoByNickname = async (req, res) => {
                 status: 'error',
                 message: 'No se ha encontrado el alumno'
             });
-        }else{
+        } else {
             res.status(200).json({
                 status: 'success',
                 message: 'Alumno obtenido correctamente',
@@ -121,12 +162,12 @@ exports.registrarAlumno = (req, res) => {
     const regex = /^([DSFI])([0-3])\1[0-3]\1[0-3]\1[0-3]$/;
 
     if (!nickname || !patron || !perfil) {
-        return res.status(400).json({ 
+        return res.status(400).json({
             status: 'error',
             codigo_error: 1, //Codigo de error de falta de datos
-            message: 'Nickname, contraseña y perfil son requeridos' 
+            message: 'Nickname, contraseña y perfil son requeridos'
         });
-    }else if(!regex.test(patron)) {
+    } else if (!regex.test(patron)) {
         return res.status(400).json({
             status: 'error',
             codigo_error: 2, //Codigo de error de formato no valido
@@ -136,16 +177,16 @@ exports.registrarAlumno = (req, res) => {
 
     const texto = perfil.texto || false;
     const imagenes = perfil.imagenes || false;
-    const pictograma = perfil.pictograma|| false;
+    const pictograma = perfil.pictograma || false;
     const video = perfil.video || false;
     const audio = perfil.audio || false;
     const porDefecto = perfil.porDefecto || "texto";
 
-    if(!texto && !imagenes && !pictograma && !video && !audio){
-        return res.status(400).json({ 
+    if (!texto && !imagenes && !pictograma && !video && !audio) {
+        return res.status(400).json({
             status: 'error',
             codigo_error: 3, //Codigo de error de falta de perfil
-            message: 'El alumno debe tener al menos un tipo de perfil' 
+            message: 'El alumno debe tener al menos un tipo de perfil'
         });
     }
 
@@ -158,7 +199,7 @@ exports.registrarAlumno = (req, res) => {
         video: video,
         audio: audio,
         porDefecto: porDefecto,
-        imagenBase64 : image
+        imagenBase64: image
     }).then(student => {
         res.status(201).json({
             status: 'success',
@@ -182,15 +223,15 @@ exports.actualizarAlumno = (req, res) => {
 
     const texto = perfil.texto || false;
     const imagenes = perfil.imagenes || false;
-    const pictograma = perfil.pictograma|| false;
+    const pictograma = perfil.pictograma || false;
     const video = perfil.video || false;
     const audio = perfil.audio || false;
     const porDefecto = perfil.porDefecto || "texto";
 
-    if(!texto && !imagenes && !pictograma && !video && !audio){
-        return res.status(400).json({ 
+    if (!texto && !imagenes && !pictograma && !video && !audio) {
+        return res.status(400).json({
             status: 'error',
-            message: 'El alumno debe tener al menos un tipo de perfil' 
+            message: 'El alumno debe tener al menos un tipo de perfil'
         });
     }
 
@@ -213,7 +254,7 @@ exports.actualizarAlumno = (req, res) => {
             video: video,
             audio: audio,
             porDefecto: porDefecto,
-            imagenBase64 : image
+            imagenBase64: image
         });
     }).then(updatedStudent => {
         res.status(201).json({
