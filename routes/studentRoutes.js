@@ -184,6 +184,36 @@ router.get('', studentController.listarAlumnos);
 
 /**
  * @swagger
+ * /alumnos/filtered:
+ *   get:
+ *     summary: Obtiene una lista de alumnos filtrados por categoría y/o nickname.
+ *     description: Devuelve una lista de alumnos que tienen una categoría específica establecida en true o cuyo nickname contenga el texto especificado.
+ *     tags: [Alumnos]
+ *     parameters:
+ *       - in: query
+ *         name: categoria
+ *         schema:
+ *           type: string
+ *           enum: [texto, imagenes, pictograma, video, audio]
+ *         required: false
+ *         description: Categoría booleana (texto, imagenes, pictograma, video, audio) para filtrar alumnos que tienen ese campo en true.
+ *       - in: query
+ *         name: nickname
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Texto para filtrar alumnos cuyo nickname contenga esa cadena.
+ *     responses:
+ *       200:
+ *         description: Lista de alumnos filtrados.
+ *       500:
+ *         description: Error interno del servidor.
+ */
+router.get('/filtered', studentController.filteredObtenerAlumnos);
+
+
+/**
+ * @swagger
  * /alumnos/{id_usuario}:
  *   get:
  *     summary: Obtener un alumno por ID

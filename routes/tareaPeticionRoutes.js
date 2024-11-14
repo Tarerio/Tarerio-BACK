@@ -202,6 +202,9 @@ router.patch("/:id", tareaPeticionController.updateFechaCierreTarea);
  *             properties:
  *               id_usuario:
  *                 type: integer
+ *               Fecha_fin_asignacion:
+ *                 type: string
+ *                 format: date
  *     responses:
  *       200:
  *         description: Tarea de petición asignada exitosamente

@@ -13,6 +13,11 @@ const AlumnoTareaPeticion = sequelize.define("AlumnoTareaPeticion", {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false,
+  },
+  Fecha_fin_asignacion: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    unique: false,
   }
 }, {
   freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
