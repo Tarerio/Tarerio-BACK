@@ -207,6 +207,7 @@ exports.registrarAlumno = (req, res) => {
             alumno: student,
         });
     }).catch(err => {
+        console.error('Error al crear el alumno:', err);
         res.status(500).json({
             status: 'error',
             codigo_error: 4, //Codigo de error de fallo al crear por duplicidad
