@@ -82,6 +82,8 @@ router.post('/crear', teacherController.registrarProfesor);
  */
 router.get('', teacherController.listarProfesores);
 
+router.get('/filtered', teacherController.filteredObtenerProfesores);
+
 //GET obtener profesor por ID
 /**
  * @swagger

@@ -1,5 +1,6 @@
 const Profesor = require('../models/teacher');
 const bcrypt = require('bcrypt');
+const { Sequelize } = require('sequelize');
 
 //POST
 // http://localhost:3000/profesores/inicioSesionProfesor
@@ -63,6 +64,31 @@ exports.listarProfesores = (req, res) => {
         });
     });
 }
+
+//GET
+// http://localhost:3000/profesores/filtered?nickname=algo
+exports.filteredObtenerProfesores = async (req, res) => {
+    const { nickname } = req.query;
+
+    let whereClause = {};
+
+    if (nickname) {
+        whereClause.nickname = {
+            [Sequelize.Op.iLike]: `%${nickname}%`
+        };
+    }
+
+    Profesor.findAll({
+        where: whereClause
+    })
+    .then(profesores => {
+        res.json(profesores);
+    })
+    .catch(error => {
+        console.error('Error al filtrar profesores:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    });
+};
 
 //GET
 // http://localhost:3000/profesores/:id_usuario
