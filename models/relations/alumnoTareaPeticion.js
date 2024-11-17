@@ -18,6 +18,11 @@ const AlumnoTareaPeticion = sequelize.define("AlumnoTareaPeticion", {
     type: DataTypes.DATE,
     allowNull: false,
     unique: false,
+  },
+  pasosPagina: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 1,
   }
 }, {
   freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla

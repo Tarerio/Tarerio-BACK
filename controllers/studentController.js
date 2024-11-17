@@ -64,7 +64,7 @@ exports.filteredObtenerAlumnos = async (req, res) => {
     // Obtén los parámetros de la query
     const { categoria, nickname } = req.query;
 
-    console.log("ESTOY FILTRANDO");
+    //console.log("ESTOY FILTRANDO");
 
     // Crea un objeto de condiciones para la búsqueda
     let whereClause = {};

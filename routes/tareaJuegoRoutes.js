@@ -189,4 +189,117 @@ router.patch("/:id", tareaJuegoController.updateFechaCierreTarea);
  */
 router.post("/:id/asignar", tareaJuegoController.asignarTareaAlumno);
 
+// GET obtener tareas asignadas a un usuario, por nickname, y filtradas por "en proceso" ( completado = false), "completadas" (completado = true) o "revisadas" (revisado = true)
+/**
+ * @swagger
+ * /tareaJuego/{nickname}/asignadas:
+ *   get:
+ *     summary: Obtener tareas asignadas a un usuario
+ *     tags: [TareasJuego]
+ *     parameters:
+ *       - in: path
+ *         name: nickname
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nickname del usuario
+ *       - in: query
+ *         name: estado
+ *         schema:
+ *           type: string
+ *           enum: [en_proceso, completado, revisado]
+ *         required: false
+ *         description: Estado de las tareas (en_proceso, completado, revisado)
+ *       - in: query
+ *         name: fecha
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Fecha de las tareas en formato YYYY-MM-DD
+ *     responses:
+ *       200:
+ *         description: Lista de tareas asignadas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id_usuario:
+ *                     type: integer
+ *                   id_tarea:
+ *                     type: integer
+ *                   completado:
+ *                     type: boolean
+ *                   revisado:
+ *                     type: boolean
+ *                   Fecha_fin_asignacion:
+ *                     type: string
+ *                     format: date-time
+ *       404:
+ *         description: Alumno no encontrado
+ *       500:
+ *         description: Error al obtener las tareas asignadas
+ */
+router.get("/:nickname/asignadas", tareaJuegoController.getTareasAsignadasByAlumno);
+
+// PUT marcarTarea/marcar tarea como completada o revisada por ID de la tarea
+/**
+ * @swagger
+ * /tareaJuego/marcarTarea/marcar:
+ *   put:
+ *     summary: Marcar tarea de juego como completada o revisada
+ *     tags: [TareasJuego]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nickname:
+ *                 type: string
+ *                 description: Nickname del alumno
+ *               ID_tarea:
+ *                 type: integer
+ *                 description: ID de la tarea de juego asignada
+ *               completado:
+ *                 type: boolean
+ *                 description: Estado de completado de la tarea
+ *               revisado:
+ *                 type: boolean
+ *                 description: Estado de revisado de la tarea
+ *     responses:
+ *       200:
+ *         description: Tarea de juego marcada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 tarea:
+ *                   type: object
+ *                   properties:
+ *                     id_usuario:
+ *                       type: integer
+ *                     id_tarea:
+ *                       type: integer
+ *                     completado:
+ *                       type: boolean
+ *                     revisado:
+ *                       type: boolean
+ *                     Fecha_fin_asignacion:
+ *                       type: string
+ *                       format: date-time
+ *       404:
+ *         description: Alumno o tarea no encontrada
+ *       500:
+ *         description: Error al marcar la tarea de juego
+ */
+router.put("/marcarTarea/marcar", tareaJuegoController.marcarTareaJuego);
+
 module.exports = router;

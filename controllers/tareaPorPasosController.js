@@ -197,38 +197,148 @@ exports.updateFechaCierreTarea = async (req, res) => {
     }
 };
 
-//POST
+// POST
 // Asignar tarea a alumno
-//http://localhost:3000/tareaPorPasos/:id/asignar
+// http://localhost:3000/tareaPorPasos/:id/asignar
 exports.asignarTareaAlumno = async (req, res) => {
     const { id } = req.params;
-    const { id_usuario , Fecha_fin_asignacion} = req.body;
+    const { id_usuario, Fecha_fin_asignacion, pasosPagina } = req.body;
+  
+    try {
+      // Verificar si el alumno y la tarea existen
+      const alumnoEncontrado = await Alumno.findByPk(id_usuario);
+      const tareaEncontrada = await TareaPorPasos.findByPk(id);
+  
+      if (!alumnoEncontrado) {
+        return res.status(404).json({ message: "Alumno no encontrado" });
+      }
+  
+      if (!tareaEncontrada) {
+        return res.status(404).json({ message: "Tarea no encontrada" });
+      }
+  
+      // Crear la asignación con o sin pasosPagina
+      let asignacionData = {
+        id_usuario: id_usuario,
+        ID_tarea: id,
+        Fecha_fin_asignacion: Fecha_fin_asignacion,
+        completado: false,
+        revisado: false
+      };
+  
+      if (pasosPagina !== undefined) {
+        asignacionData.pasosPagina = pasosPagina;
+      }
+  
+      let asignacion = await AlumnoTareaPorPasos.create(asignacionData);
+  
+      return res.status(201).json({ message: "Tarea asignada con éxito", asignacion });
+  
+    } catch (error) {
+      console.error("Error al asignar tarea a alumno:", error);
+      return res.status(500).json({ message: "Error al asignar tarea a alumno", error: error.message });
+    }
+  };
+
+// GET obtener tareas asignadas a un usuario, por nickname, y filtradas por "en proceso" (completado = false), "completadas" (completado = true) o "revisadas" (revisado = true)
+// http://localhost:3000/tareaPorPasos/:nickname/asignadas
+// ejemplo -> http://localhost:3000/tareaPorPasos/1/asignadas?estado=completado&fecha=2024-11-17
+
+exports.getTareasAsignadasByAlumno = async (req, res) => {
+    const { nickname } = req.params;
+    const { estado, fecha } = req.query;
 
     try {
-        // Verificar si el alumno y la tarea existen
-        const alumnoEncontrado = await Alumno.findByPk(id_usuario);
-        const tareaEncontrada = await TareaPorPasos.findByPk(id);
+        // Verificar si el alumno existe
+        const alumnoEncontrado = await Alumno.findOne({
+            where: { nickname }
+        });
 
         if (!alumnoEncontrado) {
             return res.status(404).json({ message: "Alumno no encontrado" });
         }
 
-        if (!tareaEncontrada) {
-            return res.status(404).json({ message: "Tarea no encontrada" });
+        // Filtrar las tareas asignadas al alumno
+        let whereClause = { id_usuario: alumnoEncontrado.id_usuario };
+
+        if (estado === "completado") {
+            whereClause.completado = true;
+        } else if (estado === "revisado") {
+            whereClause.revisado = true;
+        } else {
+            whereClause.completado = false;
         }
-        
-        let asignacion = await AlumnoTareaPorPasos.create({
-            id_usuario: id_usuario,
-            ID_tarea: id,
-            Fecha_fin_asignacion: Fecha_fin_asignacion,
-            completado: false,
-            revisado: false,
+
+        if (fecha) {
+            const startDate = new Date(fecha);
+            startDate.setHours(0, 0, 0, 0);
+            const endDate = new Date(fecha);
+            endDate.setHours(23, 59, 59, 999);
+
+            whereClause.Fecha_fin_asignacion = {
+                [Op.between]: [startDate, endDate]
+            };
+        }
+
+        let tareasAsignadas = await AlumnoTareaPorPasos.findAll({
+            where: whereClause
         });
 
-        return res.status(201).json({ message: "Tarea asignada con éxito", asignacion });
-
+        res.status(200).json(tareasAsignadas);
     } catch (error) {
-        console.error("Error al asignar tarea a alumno:", error);
-        return res.status(500).json({ message: "Error al asignar tarea a alumno", error: error.message });
+        console.error('Error al obtener las tareas asignadas:', error);
+        res.status(500).json({ message: 'Error al obtener las tareas asignadas' });
     }
 };
+
+// PUT marcar tarea de juego como completada o revisada
+// http://localhost:3000/tareaPorPasos/marcarTarea/marcar
+
+exports.marcarTareaPorPasos = async (req, res) => {
+    const { nickname, ID_tarea } = req.body;
+    const { completado, revisado } = req.body;
+  
+    try {
+      // Buscar el alumno por nickname
+      const alumnoEncontrado = await Alumno.findOne({
+        where: { nickname }
+      });
+  
+      if (!alumnoEncontrado) {
+        return res.status(404).json({ message: "Alumno no encontrado" });
+      }
+  
+      // Buscar la tarea de juego asignada al alumno
+      console.log(alumnoEncontrado.id_usuario);
+      console.log(ID_tarea);
+  
+      const tareaAsignada = await AlumnoTareaPorPasos.findOne({
+        where: {
+          id_usuario: alumnoEncontrado.id_usuario,
+          ID_tarea: ID_tarea
+        }
+      });
+  
+      if (!tareaAsignada) {
+        return res.status(404).json({ message: f`Tarea no encontrada para el alumno ${id_usuario}, tarea ${ID_tarea}` });
+      }
+  
+      // Actualizar el estado de la tarea
+      if (completado !== undefined) {
+        tareaAsignada.completado = completado;
+      }
+      if (revisado !== undefined) {
+        tareaAsignada.revisado = revisado;
+      }
+  
+      await tareaAsignada.save();
+  
+      res.status(200).json({
+        message: "Tarea de juego marcada exitosamente",
+        tarea: tareaAsignada
+      });
+    } catch (error) {
+      console.error("Error al marcar la tarea de juego:", error);
+      res.status(500).json({ message: "Error al marcar la tarea de juego", error: error.message });
+    }
+  };
