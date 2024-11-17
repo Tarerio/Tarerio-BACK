@@ -354,4 +354,28 @@ router.get("/:nickname/asignadas", tareaPorPasosController.getTareasAsignadasByA
  */
 router.put("/marcarTarea/marcar", tareaPorPasosController.marcarTareaPorPasos);
 
+// DELETE eliminar tarea por pasos por ID
+/**
+ * @swagger
+ * /tareaPorPasos/{id}:
+ *   delete:
+ *     summary: Eliminar una tarea por pasos por su ID
+ *     tags: [TareasPorPasos]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la tarea por pasos
+ *     responses:
+ *       200:
+ *         description: Tarea por pasos eliminada exitosamente
+ *       404:
+ *         description: Tarea no encontrada
+ *       500:
+ *         description: Error al eliminar la tarea por pasos
+ */
+router.delete("/:id", tareaPorPasosController.eliminarTareaPorPasos);
+
 module.exports = router;

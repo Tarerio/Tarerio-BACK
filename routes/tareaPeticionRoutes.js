@@ -354,5 +354,28 @@ router.get("/:nickname/asignadas", tareaPeticionController.getTareasAsignadasByA
  *         description: Error al marcar la tarea de por pasos
  */
 router.put("/marcarTarea/marcar", tareaPeticionController.marcarTareaPeticion);
+// DELETE eliminar tarea de petición por ID
+/**
+ * @swagger
+ * /tareaPeticion/{id}:
+ *   delete:
+ *     summary: Eliminar una tarea de petición por su ID
+ *     tags: [TareasPeticion]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la tarea de petición
+ *     responses:
+ *       200:
+ *         description: Tarea de petición eliminada exitosamente
+ *       404:
+ *         description: Tarea no encontrada
+ *       500:
+ *         description: Error al eliminar la tarea de petición
+ */
+router.delete("/:id", tareaPeticionController.eliminarTareaPeticion);
 
 module.exports = router;

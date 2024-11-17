@@ -324,4 +324,32 @@ exports.marcarTareaPeticion = async (req, res) => {
       console.error("Error al marcar la tarea de juego:", error);
       res.status(500).json({ message: "Error al marcar la tarea de juego", error: error.message });
     }
-  };
+};
+
+//DELETE
+//http://localhost:3000/tareaPeticion/:id
+exports.eliminarTareaPeticion = async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const tareaPeticion = await TareaPeticion.findByPk(id);
+  
+      if (!tareaPeticion) {
+        return res.status(404).json({ message: "Tarea no encontrada" });
+      }
+  
+      const destruidas = await AlumnoTareaPeticion.destroy({
+        where: {
+          ID_tarea: id
+        }
+      });
+  
+      await tareaPeticion.destroy(); //Elimina enunciaods y respuestas por CASCADE
+  
+      return res.status(200).json({ message: "Tarea eliminada con éxito con " + destruidas + " asignaciones a alumnos eliminadas" });
+  
+    } catch (error) {
+      console.error("Error al eliminar la tarea:", error);
+      return res.status(500).json({ message: "Error al eliminar la tarea", error: error.message });
+    }
+  }

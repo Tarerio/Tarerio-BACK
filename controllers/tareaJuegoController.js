@@ -154,6 +154,34 @@ exports.asignarTareaAlumno = async (req, res) => {
   }
 };
 
+//DELETE
+//http://localhost:3000/tareaJuego/:id
+exports.eliminarTareaJuego = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const tareaJuego = await TareaJuego.findByPk(id);
+
+    if (!tareaJuego) {
+      return res.status(404).json({ message: "Tarea no encontrada" });
+    }
+
+    const destruidas = await AlumnoTareaJuego.destroy({
+      where: {
+        ID_tarea: id
+      }
+    });
+
+    await tareaJuego.destroy();
+
+    return res.status(200).json({ message: "Tarea eliminada con éxito. " + destruidas + " asignaciones a alumnos eliminadas" });
+
+  } catch (error) {
+    console.error("Error al eliminar la tarea:", error);
+    return res.status(500).json({ message: "Error al eliminar la tarea", error: error.message });
+  }
+}
+
 // GET obtener tareas asignadas a un usuario, por nickname, y filtradas por "en proceso" (completado = false), "completadas" (completado = true) o "revisadas" (revisado = true)
 // http://localhost:3000/tareaJuego/:id_usuario/asignadas
 // ejemplo -> http://localhost:3000/tareaJuego/1/asignadas?estado=completado&fecha=2024-11-17
