@@ -182,15 +182,15 @@ router.patch("/:id", tareaPorPasosController.updateFechaCierreTarea);
  * @swagger
  * /tareaPorPasos/{id}/asignar:
  *   post:
- *     summary: Asignar una tarea por pasos a un usuario
+ *     summary: Asignar tarea a alumno
  *     tags: [TareasPorPasos]
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
  *         schema:
  *           type: integer
- *         description: ID de la tarea por pasos
+ *         required: true
+ *         description: ID de la tarea de por pasos
  *     requestBody:
  *       required: true
  *       content:
@@ -200,17 +200,158 @@ router.patch("/:id", tareaPorPasosController.updateFechaCierreTarea);
  *             properties:
  *               id_usuario:
  *                 type: integer
+ *                 description: ID del alumno
  *               Fecha_fin_asignacion:
  *                 type: string
  *                 format: date
+ *                 description: Fecha de fin de asignación
+ *               pasosPagina:
+ *                 type: integer
+ *                 description: Número de pasos de la página (opcional)
  *     responses:
- *       200:
- *         description: Tarea por pasos asignada exitosamente
+ *       201:
+ *         description: Tarea asignada con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 asignacion:
+ *                   type: object
+ *                   properties:
+ *                     id_usuario:
+ *                       type: integer
+ *                     ID_tarea:
+ *                       type: integer
+ *                     Fecha_fin_asignacion:
+ *                       type: string
+ *                       format: date
+ *                     completado:
+ *                       type: boolean
+ *                     revisado:
+ *                       type: boolean
+ *                     pasosPagina:
+ *                       type: integer
  *       404:
- *         description: Tarea no encontrada
+ *         description: Alumno o tarea no encontrada
  *       500:
- *         description: Error al asignar la tarea por pasos
+ *         description: Error al asignar tarea a alumno
  */
 router.post("/:id/asignar", tareaPorPasosController.asignarTareaAlumno);
+
+
+/**
+ * @swagger
+ * /tareaPorPasos/{nickname}/asignadas:
+ *   get:
+ *     summary: Obtener tareas asignadas a un usuario
+ *     tags: [TareasPorPasos]
+ *     parameters:
+ *       - in: path
+ *         name: nickname
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nickname del usuario
+ *       - in: query
+ *         name: estado
+ *         schema:
+ *           type: string
+ *           enum: [en_proceso, completado, revisado]
+ *         required: false
+ *         description: Estado de las tareas (en_proceso, completado, revisado)
+ *       - in: query
+ *         name: fecha
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Fecha de las tareas en formato YYYY-MM-DD
+ *     responses:
+ *       200:
+ *         description: Lista de tareas asignadas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id_usuario:
+ *                     type: integer
+ *                   id_tarea:
+ *                     type: integer
+ *                   completado:
+ *                     type: boolean
+ *                   revisado:
+ *                     type: boolean
+ *                   Fecha_fin_asignacion:
+ *                     type: string
+ *                     format: date-time
+ *       404:
+ *         description: Alumno no encontrado
+ *       500:
+ *         description: Error al obtener las tareas asignadas
+ */
+router.get("/:nickname/asignadas", tareaPorPasosController.getTareasAsignadasByAlumno);
+
+  // PUT marcarTarea/marcar tarea como completada o revisada por ID de la tarea
+/**
+ * @swagger
+ * /tareaPorPasos/marcarTarea/marcar:
+ *   put:
+ *     summary: Marcar tarea por pasos como completada o revisada
+ *     tags: [TareasPorPasos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nickname:
+ *                 type: string
+ *                 description: Nickname del alumno
+ *               ID_tarea:
+ *                 type: integer
+ *                 description: ID de la tarea por pasos asignada
+ *               completado:
+ *                 type: boolean
+ *                 description: Estado de completado de la tarea
+ *               revisado:
+ *                 type: boolean
+ *                 description: Estado de revisado de la tarea
+ *     responses:
+ *       200:
+ *         description: Tarea por pasos marcada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 tarea:
+ *                   type: object
+ *                   properties:
+ *                     id_usuario:
+ *                       type: integer
+ *                     id_tarea:
+ *                       type: integer
+ *                     completado:
+ *                       type: boolean
+ *                     revisado:
+ *                       type: boolean
+ *                     Fecha_fin_asignacion:
+ *                       type: string
+ *                       format: date-time
+ *       404:
+ *         description: Alumno o tarea no encontrada
+ *       500:
+ *         description: Error al marcar la tarea de por pasos
+ */
+router.put("/marcarTarea/marcar", tareaPorPasosController.marcarTareaPorPasos);
 
 module.exports = router;
