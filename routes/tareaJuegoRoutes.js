@@ -302,4 +302,28 @@ router.get("/:nickname/asignadas", tareaJuegoController.getTareasAsignadasByAlum
  */
 router.put("/marcarTarea/marcar", tareaJuegoController.marcarTareaJuego);
 
+// DELETE eliminar tarea de juego por ID
+/**
+ * @swagger
+ * /tareaJuego/{id}:
+ *   delete:
+ *     summary: Eliminar una tarea de juego por su ID
+ *     tags: [TareasJuego]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la tarea de juego
+ *     responses:
+ *       200:
+ *         description: Tarea de juego eliminada exitosamente
+ *       404:
+ *         description: Tarea no encontrada
+ *       500:
+ *         description: Error al eliminar la tarea de juego
+ */
+router.delete('/:id', tareaJuegoController.eliminarTareaJuego);
+
 module.exports = router;
