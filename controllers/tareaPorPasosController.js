@@ -2,6 +2,8 @@ const { TareaPorPasos, Subtarea } = require("../models/tareaPorPasos");
 const sequelize = require('../config/database');
 const Alumno = require('../models/student');
 const AlumnoTareaPorPasos = require('../models/relations/alumnoTareaPorPasos');
+const { Op, where } = require('sequelize');
+
 
 //GET 
 // Una tarea por su ID
@@ -263,11 +265,13 @@ exports.getTareasAsignadasByAlumno = async (req, res) => {
 
         if (estado === "completado") {
             whereClause.completado = true;
+            whereClause.revisado = false;
         } else if (estado === "revisado") {
             whereClause.revisado = true;
-        } else {
+        } else if (estado === "en_proceso") {
             whereClause.completado = false;
-        }
+            whereClause.revisado = false;
+          }
 
         if (fecha) {
             const startDate = new Date(fecha);
