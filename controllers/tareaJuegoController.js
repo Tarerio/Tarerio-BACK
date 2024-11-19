@@ -1,7 +1,7 @@
 const TareaJuego = require("../models/tareaJuego");
 const AlumnoTareaJuego = require("../models/relations/alumnoTareaJuego");
 const Alumno = require("../models/student");
-const { Op } = require('sequelize');
+const { Op, where } = require('sequelize');
 
 
 //GET
@@ -205,10 +205,12 @@ exports.getTareasAsignadasByAlumno = async (req, res) => {
 
     if (estado === "completado") {
       whereClause.completado = true;
+      whereClause.revisado = false;
     } else if (estado === "revisado") {
       whereClause.revisado = true;
-    } else {
+    } else if (estado === "en_proceso") {
       whereClause.completado = false;
+      whereClause.revisado = false;
     }
 
     if (fecha) {
