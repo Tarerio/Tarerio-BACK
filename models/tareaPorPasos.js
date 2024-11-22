@@ -29,6 +29,11 @@ const TareaPorPasos = sequelize.define("TareaPorPasos", {
     type: DataTypes.DATE,
     allowNull: true,
   },
+  imagenBase64: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    unique: false
+  }
 });
 
 // ===================================================================

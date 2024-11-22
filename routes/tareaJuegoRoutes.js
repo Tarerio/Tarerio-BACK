@@ -2,6 +2,39 @@ const express = require('express');
 const router = express.Router();
 const tareaJuegoController = require('../controllers/tareaJuegoController');
 
+// GET
+// http://localhost:3000/tareaJuego/filtered?nombreTarea=...
+/**
+ * @swagger
+ * /tareaJuego/filtered:
+ *   get:
+ *     summary: Filtra tareas de juego por nombre
+ *     description: Este endpoint permite obtener todas las tareas de juego que coinciden parcialmente con el nombre proporcionado.
+ *     tags: [TareasJuego]
+ *     parameters:
+ *       - in: query
+ *         name: nombreTarea
+ *         description: El nombre de la tarea para filtrar las tareas de juego (opcional)
+ *         required: false
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de tareas de juego filtradas por nombre
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: "#/components/schemas/TareaJuego"
+ *       400:
+ *         description: Solicitud inválida, nombreTarea no proporcionado o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get('/filtered', tareaJuegoController.filteredGetAllTareaPeticion);
+
+
 // GET obtener tarea por ID
 /**
  * @swagger
@@ -64,6 +97,9 @@ router.get('', tareaJuegoController.getAllTareasJuego);
  *                 description: URL del recurso asociado a la tarea
  *               creatorId:
  *                 type: integer
+ *               image:
+ *                 type: string
+ *                 description: Imagen en base64
  *     responses:
  *       201:
  *         description: Tarea de juego creada exitosamente
@@ -103,6 +139,9 @@ router.post('', tareaJuegoController.crearTareaJuego);
  *               Enlace:
  *                 type: string
  *                 description: URL del recurso asociado a la tarea
+ *               image:
+ *                 type: string
+ *                 description: Imagen en base64
  *     responses:
  *       200:
  *         description: Tarea de juego actualizada exitosamente

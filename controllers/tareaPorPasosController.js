@@ -26,6 +26,33 @@ exports.getTareaPorPasosById = (req, res) => {
 };
 
 //GET
+// http://localhost:3000/tareaPorPasos/filtered?nombreTarea=algo
+exports.filteredGetAllTareaPorPasos = async (req, res) => {
+
+    const { nombreTarea } = req.query;
+
+    let whereClause = {};
+    
+    if (nombreTarea) {
+        whereClause.Titulo = {
+            [Op.iLike]: `%${nombreTarea}%` // Utiliza LIKE para buscar coincidencias parciales (case-insensitive)
+        };
+    }
+
+    TareaPorPasos.findAll({
+        where: whereClause,
+        include: [{ model: Subtarea }] // Incluir las subtareas
+    })
+    .then(tareaPorPasos => {
+        res.json(tareaPorPasos);
+    })
+    .catch(error => {
+        console.error('Error al filtrar las tareas:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    });
+};
+
+//GET
 // Todas las tareas por pasos
 //http://localhost:3000/tareaPorPasos
 exports.getAllTareaPorPasos = (req, res) => {
@@ -45,7 +72,7 @@ exports.getAllTareaPorPasos = (req, res) => {
 // Crear una tarea por pasos
 //http://localhost:3000/tareaPorPasos
 exports.crearTareaPorPasos = async (req, res) => {
-    const { Titulo, Descripcion, Fecha_estimada_cierre, subtareas, creatorId} = req.body;
+    const { Titulo, Descripcion, Fecha_estimada_cierre, subtareas, creatorId, imagen} = req.body;
 
     // Iniciar una transacción
     const transaction = await sequelize.transaction();
@@ -57,6 +84,7 @@ exports.crearTareaPorPasos = async (req, res) => {
             Descripcion: Descripcion,
             Fecha_estimada_cierre: Fecha_estimada_cierre,
             creatorId: creatorId,
+            imagenBase64: imagen
         }, { transaction });
 
         // Crear las subtareas asociadas a la tarea
@@ -85,7 +113,7 @@ exports.crearTareaPorPasos = async (req, res) => {
 //http://localhost:3000/tareaPorPasos/:id
 exports.updateTareaPorPasos = async (req, res) => {
     const { id } = req.params;
-    const { Titulo, Descripcion, Fecha_estimada_cierre, subtareas } = req.body;
+    const { Titulo, Descripcion, Fecha_estimada_cierre, subtareas, imagen} = req.body;
 
     // Iniciar una transacción
     const transaction = await sequelize.transaction();
@@ -103,7 +131,8 @@ exports.updateTareaPorPasos = async (req, res) => {
         await tareaPorPasos.update({ // Actualizar la tarea
             Titulo,
             Descripcion,
-            Fecha_estimada_cierre
+            Fecha_estimada_cierre,
+            imagenBase64: imagen
         },
             { transaction }
         );

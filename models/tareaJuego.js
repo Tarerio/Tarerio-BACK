@@ -30,6 +30,11 @@ const TareaJuego = sequelize.define("TareaJuego", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  imagenBase64: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    unique: false
+  }
 }, {
   freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
 });
