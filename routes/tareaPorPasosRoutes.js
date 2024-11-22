@@ -2,6 +2,32 @@ const express = require("express");
 const router = express.Router();
 const tareaPorPasosController = require("../controllers/tareaPorPasosController");
 
+// GET
+// http://localhost:3000/tareaPorPasos/filtered?nombreTarea=...
+/**
+ * @swagger
+ * /tareaPorPasos/filtered:
+ *   get:
+ *     summary: Filtra tareas de juego por nombre
+ *     description: Este endpoint permite obtener todas las tareas de juego que coinciden parcialmente con el nombre proporcionado.
+ *     tags: [TareasPorPasos]
+ *     parameters:
+ *       - in: query
+ *         name: nombreTarea
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: El nombre de la tarea para filtrar las tareas de juego (opcional)
+ *     responses:
+ *       200:
+ *         description: Lista de tareas de juego filtradas por nombre
+ *       400:
+ *         description: Solicitud inválida, nombreTarea no proporcionado o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get('/filtered', tareaPorPasosController.filteredGetAllTareaPorPasos);
+
 // GET obtener tarea por pasos por ID
 /**
  * @swagger
@@ -77,6 +103,9 @@ router.get("", tareaPorPasosController.getAllTareaPorPasos);
  *                       type: string
  *               creatorId:
  *                 type: integer
+ *               image:
+ *                 type: string
+ *                 description: Imagen en base64
  *     responses:
  *       201:
  *         description: Tarea por pasos creada exitosamente
@@ -128,6 +157,9 @@ router.post("", tareaPorPasosController.crearTareaPorPasos);
  *                       type: string
  *                     Video:
  *                       type: string
+ *               image:
+ *                 type: string
+ *                 description: Imagen en base64
  *     responses:
  *       200:
  *         description: Tarea por pasos actualizada exitosamente

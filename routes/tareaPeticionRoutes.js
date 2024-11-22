@@ -2,6 +2,38 @@ const express = require("express");
 const router = express.Router();
 const tareaPeticionController = require("../controllers/tareaPeticionController");
 
+// GET
+// http://localhost:3000/tareaPeticion/filtered?nombreTarea=...
+/**
+ * @swagger
+ * /tareaPeticion/filtered:
+ *   get:
+ *     summary: Filtra tareas de juego por nombre
+ *     description: Este endpoint permite obtener todas las tareas de juego que coinciden parcialmente con el nombre proporcionado.
+ *     tags: [TareasPeticion]
+ *     parameters:
+ *       - in: query
+ *         name: nombreTarea
+ *         description: El nombre de la tarea para filtrar las tareas de juego (opcional)
+ *         required: false
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de tareas de juego filtradas por nombre
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: "#/components/schemas/tareaPeticion"
+ *       400:
+ *         description: Solicitud inválida, nombreTarea no proporcionado o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get('/filtered', tareaPeticionController.filteredGetAllTareaPeticion);
+
 // GET obtener tarea de petición por ID
 /**
  * @swagger
@@ -80,6 +112,9 @@ router.get("", tareaPeticionController.getAllTareaPeticion);
  *                             type: boolean
  *               creatorId:
  *                 type: integer
+ *               image:
+ *                 type: string
+ *                 description: Imagen en base64
  *     responses:
  *       201:
  *         description: Tarea de petición creada exitosamente
@@ -116,6 +151,9 @@ router.post("", tareaPeticionController.crearTareaPeticion);
  *               Fecha_estimada_cierre:
  *                 type: string
  *                 format: date
+ *               image:
+ *                 type: string
+ *                 description: Imagen en base64
  *               enunciados:
  *                 type: array
  *                 items:

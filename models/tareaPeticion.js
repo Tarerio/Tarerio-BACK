@@ -30,6 +30,11 @@ const TareaPeticion = sequelize.define("TareaPeticion", {
     type: DataTypes.DATE,
     allowNull: true,
   },
+  imagenBase64: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    unique: false
+  }
 }, {
   freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
 });
