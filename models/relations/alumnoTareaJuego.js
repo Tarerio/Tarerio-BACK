@@ -17,14 +17,29 @@ const AlumnoTareaJuego = sequelize.define("AlumnoTareaJuego", {
   Fecha_fin_asignacion: {
     type: DataTypes.DATE,
     allowNull: false,
-    unique: false,
-  }
+    primaryKey: true, // Incluido como parte de la clave primaria
+  },
+  id_usuario: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true, // Incluido como parte de la clave primaria
+    references: {
+      model: Alumno,
+      key: 'id_usuario',
+    },
+  },
+  ID_tarea: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true, // Incluido como parte de la clave primaria
+    references: {
+      model: TareaJuego,
+      key: 'ID_tarea',
+    },
+  },
 }, {
   freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
+  timestamps: true,
 });
-
-// Relación muchos a muchos con el modelo intermedio "se asigna"
-Alumno.belongsToMany(TareaJuego, { through: AlumnoTareaJuego, foreignKey: 'id_usuario' });
-TareaJuego.belongsToMany(Alumno, { through: AlumnoTareaJuego, foreignKey: 'ID_tarea' });
 
 module.exports = AlumnoTareaJuego;
