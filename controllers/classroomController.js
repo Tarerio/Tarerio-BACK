@@ -128,7 +128,7 @@ exports.actualizarAula = async (req, res) => {
         return classroom.update({
             clave_aula: clave,
             cupo: capacidad,
-            imageBase64: image ?? classroom.imageBase64,
+            imagenBase64: image ?? classroom.imagenBase64,
         });
     }).then(updatedClassroom => {
         res.status(201).json({
