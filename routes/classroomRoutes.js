@@ -39,6 +39,30 @@ router.post('/create', classroomController.crearAula);
 
 /**
  * @swagger
+ * /aulas/filtered:
+ *   get:
+ *     summary: Filtra aulas por nombre
+ *     description: Este endpoint permite obtener todas las aulas que coinciden parcialmente con el nombre proporcionado.
+ *     tags: [Aulas]
+ *     parameters:
+ *       - in: query
+ *         name: claveAula
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: La clave del aula para filtrar las aulas (opcional)
+ *     responses:
+ *       200:
+ *         description: Lista de aulas filtradas por clave
+ *       400:
+ *         description: Solicitud inválida, claveAula no proporcionado o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get('/filtered', classroomController.filteredObtenerAulas);
+
+/**
+ * @swagger
  * /aulas/{id_aula}:
  *   get:
  *     summary: Obtener una aula específica
