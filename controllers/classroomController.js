@@ -3,6 +3,7 @@ const Aula = require('../models/classroom');
 const Profesor = require('../models/teacher');
 const AulaProfesor = require('../models/relations/AulaProfesor');
 const Alumno = require('../models/student');
+const { Sequelize } = require('sequelize');
 
 //POST
 // http://localhost:3000/aulas/create
@@ -96,6 +97,31 @@ exports.obtenerAulas = async (req, res) => {
             });
         });
 };
+
+//GET
+// http://localhost:3000/aulas/filtered?claveAula=algo
+exports.filteredObtenerAulas = async (req, res) => {
+    const { claveAula } = req.query;
+  
+    let whereClause = {};
+  
+    if (claveAula) {
+      whereClause.clave_aula = {
+        [Sequelize.Op.iLike]: `%${claveAula}%` // Utiliza LIKE para buscar coincidencias parciales (case-insensitive)
+      };
+    }
+  
+    Aula.findAll({
+      where: whereClause,
+    })
+      .then(aulas => {
+        res.json(aulas);
+      })
+      .catch(error => {
+        console.error('Error al filtrar las aulas:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+      });
+  };
 
 //PUT
 // http://localhost:3000/aulas/:id_aula
