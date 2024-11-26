@@ -14,8 +14,11 @@ exports.inicioSesionProfesor = async (req, res) => {
         });
     }
 
+    const decodedNickname = decodeURIComponent(nickname);
+    const decodedContrasenia = decodeURIComponent(contrasenia);
+
     Profesor.findOne({
-        where: { nickname }
+        where: { nickname: decodedNickname }
     }).then(async teacher => {
         if (!teacher) {
             return res.status(404).json({
@@ -24,7 +27,7 @@ exports.inicioSesionProfesor = async (req, res) => {
             });
         }
 
-        const contraseniaValida = await bcrypt.compare(contrasenia, teacher.contrasenia);
+        const contraseniaValida = await bcrypt.compare(decodedContrasenia, teacher.contrasenia);
 
         if (!contraseniaValida) {
             return res.status(401).json({
@@ -295,3 +298,180 @@ exports.cambiarContrasenia = async (req, res) => {
         });
     });
 }
+
+//GET
+exports.obtenerAulario = async (req, res) => {
+    const { nickname } = req.params;
+    const decodedNickname = decodeURIComponent(nickname);
+
+    // Obtengo el profesor para extraer su "id_usuario"
+
+    const teacher = await Profesor.findOne({
+        where: { nickname: decodedNickname }
+    });
+
+    if (!teacher) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'No se ha encontrado el profesor'
+        });
+    }
+
+    // Obtengo el aula buscando en AulaProfesor por id_usuario : extraigo id_aula y así busco el aula
+    const AulaProfesor = require('../models/relations/AulaProfesor');
+
+    const aulaProfesor = await AulaProfesor.findOne({
+        where: { id_usuario: teacher.id_usuario }
+    });
+
+    if (!aulaProfesor) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'No se ha encontrado el aula'
+        });
+    }
+
+    const Aula = require('../models/classroom');
+
+    const aula = await Aula.findOne({
+        where: { id_aula: aulaProfesor.id_aula }
+    });
+
+    if (!aula) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'No se ha encontrado el aula'
+        });
+    }
+
+    // Obtengo los alumnos del aula buscando en Alumnos "id_aula" : extraigo id_usuario y así busco los alumnos
+
+    const Alumno = require('../models/student');
+
+    const alumnos = await Alumno.findAll({
+        where: { id_aula: aula.id_aula }
+    });
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Aula y alumnos obtenidos correctamente',
+        aula,
+        alumnos
+    });
+};
+
+// POST
+exports.crearPedidoMaterial = async (req, res) => {
+    const { nickname, materiales } = req.body;
+
+    if (!nickname || !materiales) {
+        return res.status(400).json({ 
+            status: 'error',
+            message: 'Nickname y materiales son requeridos' 
+        });
+    }
+
+    const PedidoMaterial = require('../models/relations/pedidoMaterial');
+
+    const fecha_pedido = new Date();
+
+    const decodedNickname = decodeURIComponent(nickname);
+
+    PedidoMaterial.create({
+        nickname: decodedNickname,
+        fecha_pedido,
+        materiales
+    }).then(pedido => {
+        res.status(201).json({
+            status: 'success',
+            message: 'Pedido de material creado correctamente',
+            pedido
+        });
+    }).catch(err => {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al crear el pedido de material',
+            error: err
+        });
+    });
+};
+
+// GET
+// router.get('/pedidoMaterial/obtener/:nickname', teacherController.obtenerPedidosMaterial);
+exports.obtenerPedidosMaterial = async (req, res) => {
+    const { nickname } = req.params;
+    const decodedNickname = decodeURIComponent(nickname);
+
+    const PedidoMaterial = require('../models/relations/pedidoMaterial');
+
+    const pedidos = await PedidoMaterial.findAll({
+        where: { nickname: decodedNickname }
+    });
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Pedidos de material obtenidos correctamente',
+        pedidos
+    });
+};
+
+// GET
+exports.obtenerPedidoMaterial = async (req, res) => {
+    const { id_pedido } = req.params;
+
+    const PedidoMaterial = require('../models/relations/pedidoMaterial');
+
+    const pedido = await PedidoMaterial.findOne({
+        where: { id_pedido }
+    });
+
+    if (!pedido) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'No se ha encontrado el pedido de material'
+        });
+    }
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Pedido de material obtenido correctamente',
+        pedido
+    });
+};
+
+// PUT 
+// router.put('/pedidoMaterial/marcarPedido/:id_pedido', teacherController.actualizarPedidoMaterial);
+
+exports.marcarPedido = async (req, res) => {
+    const { id_pedido } = req.params;
+    const estado = "Pedido";
+
+    const PedidoMaterial = require('../models/relations/pedidoMaterial');
+
+    const pedido = await PedidoMaterial.findOne({
+        where: { id_pedido }
+    });
+
+    if (!pedido) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'No se ha encontrado el pedido de material'
+        });
+    }
+
+    pedido.update({
+        estado
+    }).then(updatedPedido => {
+        res.status(200).json({
+            status: 'success',
+            message: 'Pedido de material actualizado correctamente',
+            pedido: updatedPedido
+        });
+    }).catch(err => {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al actualizar el pedido de material',
+            error: err
+        });
+    });
+};

@@ -209,4 +209,184 @@ router.delete('/:id_usuario', teacherController.eliminarProfesor);
  */
 router.put('/:id_usuario/cambiarContrasenia', teacherController.cambiarContrasenia);
 
+
+/**
+ * @swagger
+ * /profesores/aulario/obtener/{nickname}:
+ *   get:
+ *     summary: Obtener aula y alumnos de la misma
+ *     tags: [Profesores]
+ *     parameters:
+ *       - in: path
+ *         name: nickname
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nickname del profesor
+ *     responses:
+ *       200:
+ *         description: Aula y alumnos obtenidos correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ *                 aula:
+ *                   type: object
+ *                 alumnos:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *       404:
+ *         description: No se ha encontrado el profesor o el aula
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/aulario/obtener/:nickname', teacherController.obtenerAulario);
+
+/**
+ * @swagger
+ * /profesores/pedidoMaterial/crear:
+ *   post:
+ *     summary: Crear pedido de material
+ *     tags: [Profesores]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nickname:
+ *                 type: string
+ *                 description: Nickname del profesor
+ *               materiales:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     nombre:
+ *                       type: string
+ *                     cantidad:
+ *                       type: integer
+ *     responses:
+ *       201:
+ *         description: Pedido de material creado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ *                 pedido:
+ *                   type: object
+ *       400:
+ *         description: Nickname y materiales son requeridos
+ *       500:
+ *         description: Error al crear el pedido de material
+ */
+router.post('/pedidoMaterial/crear', teacherController.crearPedidoMaterial);
+
+/**
+ * @swagger
+ * /profesores/pedidoMaterial/obtener/{nickname}:
+ *   get:
+ *     summary: Obtener pedidos de material por nickname
+ *     tags: [Profesores]
+ *     parameters:
+ *       - in: path
+ *         name: nickname
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nickname del profesor
+ *     responses:
+ *       200:
+ *         description: Pedidos de material obtenidos correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ *                 pedidos:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *       404:
+ *         description: No se ha encontrado el profesor o los pedidos
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/pedidoMaterial/obtener/:nickname', teacherController.obtenerPedidosMaterial);
+
+/**
+ * @swagger
+ * /profesores/pedidoMaterial/obtenerPorId/{id_pedido}:
+ *   get:
+ *     summary: Obtener pedido de material por id_pedido
+ *     tags: [Profesores]
+ *     parameters:
+ *       - in: path
+ *         name: id_pedido
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID del pedido de material
+ *     responses:
+ *       200:
+ *         description: Pedido de material obtenido correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 message:
+ *                   type: string
+ *                 pedido:
+ *                   type: object
+ *       404:
+ *         description: No se ha encontrado el pedido de material
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/pedidoMaterial/obtenerPorId/:id_pedido', teacherController.obtenerPedidoMaterial);
+
+//PUT actualizar pedido de material -> estado a "Pedido"
+/**
+ * @swagger
+ * /profesores/pedidoMaterial/marcarPedido/{id_pedido}:
+ *   put:
+ *     summary: Actualizar pedido de material
+ *     tags: [Profesores]
+ *     parameters:
+ *       - in: path
+ *         name: id_pedido
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID del pedido de material
+ *     responses:
+ *       200:
+ *         description: Pedido de material actualizado correctamente
+ *       404:
+ *         description: No se ha encontrado el pedido de material
+ *       500:
+ *         description: Error del servidor
+ */
+router.put('/pedidoMaterial/marcarPedido/:id_pedido', teacherController.marcarPedido);
+
+
 module.exports = router;

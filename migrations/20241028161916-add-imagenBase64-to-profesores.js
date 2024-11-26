@@ -6,7 +6,7 @@ module.exports = {
     const tableInfo = await queryInterface.describeTable('Profesores');
     if (!tableInfo.imagenBase64) {
       await queryInterface.addColumn('Profesores', 'imagenBase64', {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: true
       });
     }
