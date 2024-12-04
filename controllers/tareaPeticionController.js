@@ -120,7 +120,7 @@ exports.crearTareaPeticion = async (req, res) => {
     // Commit
     await transaction.commit();
 
-    res.status(201).json({ message: "Tarea peticion creada" });
+    res.status(201).json({ message: "Tarea peticion creada" , ID_tarea: nuevaTareaPeticion.ID_tarea});
   } catch (err) {
     console.error("Error al crear la tarea peticion:", err);
     await transaction.rollback();

@@ -91,3 +91,33 @@ exports.inicioSesionAdmin = async (req, res) => {
         });
     });
 }
+
+//GET
+// http://localhost:3000/administradores/getIdAdmin
+exports.getIdAdmin = async (req, res) => {
+    // Recojo el primer id que encuentre en la tabla
+
+    Administrador.findOne({
+        attributes: ['id_usuario'],
+        raw: true
+    }).then(admin => {
+        if (!admin) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'No se ha encontrado el admin'
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Id del admin encontrado',
+            id: admin.id_usuario
+        });
+    }).catch(err => {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error al buscar el id del admin',
+            error: err
+        });
+    });
+}
