@@ -177,7 +177,6 @@ exports.registrarProfesor = async (req, res) => {
 exports.actualizarProfesor = (req, res) => {
     const { nickname, image } = req.body;
     const { id_usuario } = req.params;
-    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?]).+$/;
 
     Profesor.findOne({
         where: { id_usuario }
@@ -189,13 +188,9 @@ exports.actualizarProfesor = (req, res) => {
             });
         }
 
-        const coste = 1; // Puedes ajustar el costo de hashing (más alto = más seguro, pero más lento)
-        const hashedPatron = await bcrypt.hash(patron, coste);
-
         return teacher.update({
             nickname: nickname,
-            contrasenia: hashedPatron,
-            imagenBase64: image??teacher.imagenBase64
+            imagenBase64: image?? teacher.imagenBase64
         });
     }).then(updatedTeacher => {
         res.status(201).json({
