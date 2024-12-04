@@ -90,4 +90,32 @@ router.post('/inicioSesionAdministrador', adminController.inicioSesionAdmin);
  */
 router.post('/crear', adminController.registrarAdmin);
 
+/**
+* @swagger
+* /administradores/getIdAdmin:
+*   get:
+*     summary: Obtener el id del administrador
+*     description: Devuelve el id del primer administrador encontrado en la base de datos
+*     tags: [Administradores]
+*     responses:
+*       200:
+*         description: Id del admin encontrado
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 status:
+*                   type: string
+*                 message:
+*                   type: string
+*                 id:
+*                   type: integer
+*       404:
+*         description: No se ha encontrado el admin
+*       500:
+*         description: Error al buscar el id del admin
+*/
+router.get('/getIdAdmin', adminController.getIdAdmin);
+
 module.exports = router;
