@@ -12,7 +12,12 @@ const menuAccesibleRoutes = require('./routes/menuAccesibleRoutes');
 const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./swaggerConfig');
+const { Server } = require('socket.io');
+const http = require('http');
+const chatController = require('./controllers/chatController');
 require('dotenv').config();
+
+const server = http.createServer(app);
 
 app.use(express.json({limit: '5mb'}));
 app.use(express.urlencoded({limit: '5mb', extended: true }));
@@ -33,8 +38,17 @@ app.use('/menuAccesible', menuAccesibleRoutes);
 
 const port = process.env.PORT || 3000;
 
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+  }
+});
+
+io.on('connection', chatController.handleConnection);
+
+
 sequelize.sync().then(() => {
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
   });
 }).catch(err => {
