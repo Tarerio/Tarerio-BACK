@@ -92,6 +92,8 @@ exports.listarProfesores = (req, res) => {
 exports.filteredObtenerProfesores = async (req, res) => {
     const { nickname } = req.query;
 
+    console.log('nickname:', nickname);
+
     let whereClause = {};
 
     if (nickname) {
