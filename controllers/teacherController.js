@@ -53,7 +53,26 @@ exports.inicioSesionProfesor = async (req, res) => {
 //GET
 // http://localhost:3000/profesores
 exports.listarProfesores = (req, res) => {
-    Profesor.findAll().then(users => {
+
+    const { nickname } = req.query;
+
+    let whereClause = {};
+
+    if (aula) {
+        if (aula === '-1') {
+            whereClause.id_aula = null;
+        } else {
+            whereClause.id_aula = aula;
+        }
+    }
+
+    if (nickname && nickname.trim() !== '') {
+        whereClause.nickname = {
+            [Op.like]: `%${nickname}%`
+        };
+    }
+
+    Profesor.findAll({ where: whereClause }).then(users => {
         res.status(200).json({
             status: 'success',
             message: 'Profesores obtenidos correctamente',

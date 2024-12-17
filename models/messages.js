@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 
-const Messages = sequelize.define('Messages', {
+const Messages = sequelize.define('Mensajes', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -59,7 +59,7 @@ const Messages = sequelize.define('Messages', {
 Messages.associate = function (models) {
     Messages.belongsTo(models.Administradores, {
         foreignKey: { name: 'id_emisor'},
-        constraints: false,
+        constraints: true,
         scope: {
             tipo_emisor: 'administrador'
         }
@@ -67,7 +67,7 @@ Messages.associate = function (models) {
 
     Messages.belongsTo(models.Alumnos, {
         foreignKey: { name: 'id_emisor'},
-        constraints: false,
+        constraints: true,
         scope: {
             tipo_emisor: 'alumno'
         }
@@ -75,7 +75,7 @@ Messages.associate = function (models) {
 
     Messages.belongsTo(models.Profesores, {
         foreignKey: { name: 'id_emisor'},
-        constraints: false,
+        constraints: true,
         scope: {
             tipo_emisor: 'profesor'
         }
@@ -83,7 +83,7 @@ Messages.associate = function (models) {
 
     Messages.belongsTo(models.Administradores, {
         foreignKey: { name: 'id_receptor'},
-        constraints: false,
+        constraints: true,
         scope: {
             tipo_receptor: 'administrador'
         }
@@ -91,7 +91,7 @@ Messages.associate = function (models) {
 
     Messages.belongsTo(models.Alumnos, {
         foreignKey: { name: 'id_receptor'},
-        constraints: false,
+        constraints: true,
         scope: {
             tipo_receptor: 'alumno'
         }
@@ -99,7 +99,7 @@ Messages.associate = function (models) {
 
     Messages.belongsTo(models.Profesores, {
         foreignKey: { name: 'id_receptor'},
-        constraints: false,
+        constraints: true,
         scope: {
             tipo_receptor: 'profesor'
         }

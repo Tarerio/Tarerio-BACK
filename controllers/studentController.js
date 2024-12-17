@@ -1,4 +1,5 @@
 const Alumno = require('../models/student');
+const { Op } = require('sequelize');
 const { Sequelize } = require('sequelize');
 
 // POST iniciar sesión pasando en el cuerpo de la solicitud nickname y patron
@@ -30,7 +31,7 @@ exports.inicioSesionAlumno = (req, res) => {
 // http://localhost:3000/alumnos
 exports.listarAlumnos = (req, res) => {
 
-    const { aula } = req.query;
+    const { aula,nickname } = req.query;
 
     let whereClause = {};
 
@@ -40,6 +41,12 @@ exports.listarAlumnos = (req, res) => {
         } else {
             whereClause.id_aula = aula;
         }
+    }
+
+    if (nickname && nickname.trim() !== '') {
+        whereClause.nickname = {
+          [Op.like]: `%${nickname}%`
+        };
     }
 
     Alumno.findAll({ where: whereClause }).then(users => {
