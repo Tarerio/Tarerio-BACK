@@ -53,3 +53,49 @@ Profesor.hasMany(PedidoMaterial, { foreignKey: 'nickname' }); // Un profesor pue
 PedidoMaterial.belongsTo(Profesor, { foreignKey: 'nickname' }); // Un pedido pertenece a un profesor
 
 module.exports = PedidoMaterial;
+
+
+/*
+{
+    "id_comanda": 1,
+    "fecha_pedido": "2021-06-01T00:00:00.000Z",
+    "id_usuario": 3,
+    "estado": "Pendiente",
+    "aulas": [
+        {
+            "nombre": "Aula 1",
+            "menus": [
+                {
+                    "tipo": "Vegano",
+                    "cantidad": 2
+                },
+                {
+                    "tipo": "Vegetariano",
+                    "cantidad": 3
+                },
+                {
+                    "tipo": "Normal",
+                    "cantidad": 5
+                }   
+            ]   
+        },
+        {
+            "nombre": "Aula 2",
+            "menus": [
+                {
+                    "tipo": "Vegano",
+                    "cantidad": 2
+                },
+                {
+                    "tipo": "Vegetariano",
+                    "cantidad": 3
+                },
+                {
+                    "tipo": "Normal",
+                    "cantidad": 5
+                }   
+            ]   
+        },
+    ]
+}
+*/
